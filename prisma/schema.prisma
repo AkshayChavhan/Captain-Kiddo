@@ -37,8 +37,10 @@ model Parent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations (filled in by later schema tickets):
-  children  Child[]  // one parent -> many children
+  // Relations:
+  children      Child[]        // one parent -> many children
+  moduleAccess  ModuleAccess[] // paid modules this parent has unlocked
+  payments      Payment[]      // this parent's payment records
 
   @@map("parents")
 }
@@ -68,6 +70,9 @@ model Child {
   // A child accumulates progress rows and test results across modules.
   progress    Progress[]
   testResults TestResult[]
+
+  // Cosmetic items the child has bought with stars in the reward shop.
+  unlocks     Unlock[]
 
   @@index([parentId])
   @@map("children")
@@ -133,4 +138,162 @@ model TestResult {
 
   @@index([childId, module])
   @@map("test_results")
+}
+
+// ---------------------------------------------------------------------------
+// PaymentStatus — the lifecycle of a payment.
+// PENDING when the order is created; PAID only after the SERVER verifies the
+// Razorpay signature; FAILED if verification or the payment itself fails.
+// ---------------------------------------------------------------------------
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// ---------------------------------------------------------------------------
+// ModuleAccess — which PAID module a parent has unlocked.
+// Access is tied to the PARENT (pay once -> all their children get access).
+// One row = one unlocked module for one parent. Created ONLY after a verified
+// payment. The special slug "ALL" represents the ₹39 "unlock everything" bundle.
+// ---------------------------------------------------------------------------
+model ModuleAccess {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  module    String   // module slug, e.g. "animals"; or "ALL" for the bundle
+  grantedAt DateTime @default(now())
+
+  parentId  String   @db.ObjectId
+  parent    Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  // The payment that unlocked this access (optional: a bundle grant may map to
+  // one payment but create several access rows).
+  paymentId String?  @db.ObjectId
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+
+  // A parent can't unlock the same module twice.
+  @@unique([parentId, module])
+  @@index([parentId])
+  @@map("module_access")
+}
+
+// ---------------------------------------------------------------------------
+// Payment — a Razorpay payment record.
+// Money is stored as an INTEGER number of PAISE (₹5 = 500, ₹39 = 3900) — never
+// a float. We create a PENDING row first, then flip to PAID only after the
+// server verifies the Razorpay HMAC signature. The client is never trusted.
+// ---------------------------------------------------------------------------
+model Payment {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+
+  amountInPaise     Int           // e.g. 500 = ₹5, 3900 = ₹39. ALWAYS an integer.
+  currency          String        @default("INR")
+  status            PaymentStatus @default(PENDING)
+
+  // What this payment is for: a single module slug, or "ALL" for the bundle.
+  module            String
+
+  // Razorpay identifiers. The order id is created up front; the payment id and
+  // signature arrive from checkout and are verified server-side.
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  parentId          String        @db.ObjectId
+  parent            Parent        @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  // Access rows granted by this payment (one for a single buy, many for a bundle).
+  grantedAccess     ModuleAccess[]
+
+  @@index([parentId])
+  @@map("payments")
+}
+
+// ---------------------------------------------------------------------------
+// UnlockType — the kinds of cosmetic rewards a child can buy with stars.
+// ---------------------------------------------------------------------------
+enum UnlockType {
+  AVATAR
+  STICKER
+  THEME
+}
+
+// ---------------------------------------------------------------------------
+// Unlock — a REWARD SHOP purchase made with STARS (not money).
+// Kids spend Child.totalStars to unlock cosmetics. One row = one item a child
+// owns. This is separate from ModuleAccess/Payment, which use real money.
+// ---------------------------------------------------------------------------
+model Unlock {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  type      UnlockType // AVATAR | STICKER | THEME
+  itemKey   String     // which specific item, e.g. "astronaut-avatar"
+  starCost  Int        // how many stars it cost (for the audit trail)
+
+  createdAt DateTime   @default(now())
+
+  childId   String     @db.ObjectId
+  child     Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  // A child can't own the same item twice.
+  @@unique([childId, type, itemKey])
+  @@index([childId])
+  @@map("unlocks")
+}
+
+// ---------------------------------------------------------------------------
+// MediaType — the kinds of audio content.
+// ---------------------------------------------------------------------------
+enum MediaType {
+  SONG     // sing-along songs (karaoke-style, with synced lyrics)
+  LULLABY  // calming sleep music
+  STORY    // narrated sleep stories
+}
+
+// ---------------------------------------------------------------------------
+// Lyric — an EMBEDDED COMPOSITE TYPE (not its own collection).
+// One lyric line plus the time window it is "active" during the song. Used for
+// karaoke-style sing-along: as playback time enters [startSec, endSec], that
+// line highlights and the bouncing ball sits over it.
+//
+// In Prisma + MongoDB, `type` (not `model`) means these objects live EMBEDDED
+// inside a parent document (here, inside MediaContent.lyrics) — no separate
+// table, no id, no relation needed.
+// ---------------------------------------------------------------------------
+type Lyric {
+  text     String // the line of text, e.g. "Twinkle twinkle little star"
+  startSec Float  // when this line becomes active (seconds into the audio)
+  endSec   Float  // when this line stops being active
+}
+
+// ---------------------------------------------------------------------------
+// MediaContent — a SONG, LULLABY, or STORY.
+// Has its own free/paid gating (independent of learning modules). Songs carry
+// an embedded array of Lyric lines for synced sing-along; lullabies/stories
+// usually have none.
+// ---------------------------------------------------------------------------
+model MediaContent {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+
+  type          MediaType // SONG | LULLABY | STORY
+  title         String
+  audioUrl      String    // path/url to the audio file (played via Howler)
+  coverImage    String?   // artwork shown in the player
+  durationSec   Float?    // total length, handy for UI
+
+  // Gating — mirrors the learning-module rule but for media:
+  isFree        Boolean   @default(false)
+  priceInPaise  Int       @default(0) // money is ALWAYS integer paise, never float
+
+  // Embedded karaoke lyrics (empty for most lullabies/stories).
+  lyrics        Lyric[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([type])
+  @@map("media_content")
 }
