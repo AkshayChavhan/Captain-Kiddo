@@ -14,12 +14,12 @@
 
 | Phase | Area | Done / Total |
 |-------|------|--------------|
-| A | Project Setup & Foundation | 1 / 12 |
+| A | Project Setup & Foundation | 2 / 12 |
 | B | Numbers Learning Module | 0 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **1 / 43** |
+| — | **TOTAL** | **2 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -30,7 +30,7 @@
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
 | A1 | ✅ | `setup01-folder-structure` | Create the full Next.js + project folder layout |
-| A2 | ⬜ | `setup02-dependencies` | Install & document all stack dependencies |
+| A2 | ✅ | `setup02-dependencies` | Install & document all stack dependencies |
 | A3 | ⬜ | `setup03-env-template` | `.env.example` template + setup commands |
 | A4 | ⬜ | `schema01-parent-child-models` | Prisma: `Parent` & `Child` models |
 | A5 | ⬜ | `schema02-progress-testresult` | Prisma: tier-aware `Progress` + `TestResult` |
