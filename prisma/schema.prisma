@@ -1,0 +1,70 @@
+// ===========================================================================
+// Captain Kiddo — Prisma Schema (MongoDB)
+// ===========================================================================
+// This file defines our database shape. Prisma reads it to:
+//   1. Generate a fully type-safe client (`@prisma/client`)
+//   2. Sync the shape to MongoDB via `prisma db push`
+//
+// MongoDB notes:
+//   - We use `db push` (NOT `migrate`) — the MongoDB workflow.
+//   - Every id is a Mongo ObjectId: `@id @default(auto()) @map("_id") @db.ObjectId`
+//   - Every relation's foreign-key field uses `@db.ObjectId`.
+// ===========================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Parent — the ACCOUNT OWNER.
+// One parent owns many children and many payments. Holds the security PIN that
+// gates the paywall/checkout so kids can't trigger purchases.
+// ---------------------------------------------------------------------------
+model Parent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String?
+
+  // The parent PIN is stored HASHED, never in plain text. We compare a hash on
+  // the server when the parent enters their PIN to reach the parent area.
+  pinHash   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations (filled in by later schema tickets):
+  children  Child[]  // one parent -> many children
+
+  @@map("parents")
+}
+
+// ---------------------------------------------------------------------------
+// Child — a KID PROFILE under a parent.
+// Holds the kid's display info and their star balance (the reward currency
+// they spend in the reward shop).
+// ---------------------------------------------------------------------------
+model Child {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  name       String
+  age        Int      // 3–6 for our target audience
+  avatar     String?  // key/url of the chosen avatar image
+
+  // Stars earned across modules; spent in the reward shop. Integer count.
+  totalStars Int      @default(0)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relation back to the owning parent.
+  parentId   String   @db.ObjectId
+  parent     Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  @@index([parentId])
+  @@map("children")
+}
