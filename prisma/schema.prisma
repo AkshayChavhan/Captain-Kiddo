@@ -37,8 +37,10 @@ model Parent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations (filled in by later schema tickets):
-  children  Child[]  // one parent -> many children
+  // Relations:
+  children      Child[]        // one parent -> many children
+  moduleAccess  ModuleAccess[] // paid modules this parent has unlocked
+  payments      Payment[]      // this parent's payment records
 
   @@map("parents")
 }
@@ -133,4 +135,76 @@ model TestResult {
 
   @@index([childId, module])
   @@map("test_results")
+}
+
+// ---------------------------------------------------------------------------
+// PaymentStatus — the lifecycle of a payment.
+// PENDING when the order is created; PAID only after the SERVER verifies the
+// Razorpay signature; FAILED if verification or the payment itself fails.
+// ---------------------------------------------------------------------------
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// ---------------------------------------------------------------------------
+// ModuleAccess — which PAID module a parent has unlocked.
+// Access is tied to the PARENT (pay once -> all their children get access).
+// One row = one unlocked module for one parent. Created ONLY after a verified
+// payment. The special slug "ALL" represents the ₹39 "unlock everything" bundle.
+// ---------------------------------------------------------------------------
+model ModuleAccess {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  module    String   // module slug, e.g. "animals"; or "ALL" for the bundle
+  grantedAt DateTime @default(now())
+
+  parentId  String   @db.ObjectId
+  parent    Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  // The payment that unlocked this access (optional: a bundle grant may map to
+  // one payment but create several access rows).
+  paymentId String?  @db.ObjectId
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+
+  // A parent can't unlock the same module twice.
+  @@unique([parentId, module])
+  @@index([parentId])
+  @@map("module_access")
+}
+
+// ---------------------------------------------------------------------------
+// Payment — a Razorpay payment record.
+// Money is stored as an INTEGER number of PAISE (₹5 = 500, ₹39 = 3900) — never
+// a float. We create a PENDING row first, then flip to PAID only after the
+// server verifies the Razorpay HMAC signature. The client is never trusted.
+// ---------------------------------------------------------------------------
+model Payment {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+
+  amountInPaise     Int           // e.g. 500 = ₹5, 3900 = ₹39. ALWAYS an integer.
+  currency          String        @default("INR")
+  status            PaymentStatus @default(PENDING)
+
+  // What this payment is for: a single module slug, or "ALL" for the bundle.
+  module            String
+
+  // Razorpay identifiers. The order id is created up front; the payment id and
+  // signature arrive from checkout and are verified server-side.
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?
+  razorpaySignature String?
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  parentId          String        @db.ObjectId
+  parent            Parent        @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  // Access rows granted by this payment (one for a single buy, many for a bundle).
+  grantedAccess     ModuleAccess[]
+
+  @@index([parentId])
+  @@map("payments")
 }
