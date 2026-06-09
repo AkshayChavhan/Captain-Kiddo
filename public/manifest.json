@@ -1,0 +1,32 @@
+{
+  "name": "Captain Kiddo",
+  "short_name": "Captain Kiddo",
+  "description": "A fun, audio-first learning app for kids aged 3-6.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#FFD93D",
+  "theme_color": "#FF6B6B",
+  "categories": ["education", "kids"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
