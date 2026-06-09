@@ -1,0 +1,10 @@
+/**
+ * Global styles.
+ *
+ * Tailwind's three directives below pull in its base reset, component classes,
+ * and utility classes. We customize the kid-friendly theme (colors, rounded
+ * shapes, big tap targets) in the `theme01-tailwind-kid-theme` ticket.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
