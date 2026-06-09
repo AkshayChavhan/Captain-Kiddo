@@ -71,6 +71,9 @@ model Child {
   progress    Progress[]
   testResults TestResult[]
 
+  // Cosmetic items the child has bought with stars in the reward shop.
+  unlocks     Unlock[]
+
   @@index([parentId])
   @@map("children")
 }
@@ -207,4 +210,36 @@ model Payment {
 
   @@index([parentId])
   @@map("payments")
+}
+
+// ---------------------------------------------------------------------------
+// UnlockType — the kinds of cosmetic rewards a child can buy with stars.
+// ---------------------------------------------------------------------------
+enum UnlockType {
+  AVATAR
+  STICKER
+  THEME
+}
+
+// ---------------------------------------------------------------------------
+// Unlock — a REWARD SHOP purchase made with STARS (not money).
+// Kids spend Child.totalStars to unlock cosmetics. One row = one item a child
+// owns. This is separate from ModuleAccess/Payment, which use real money.
+// ---------------------------------------------------------------------------
+model Unlock {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  type      UnlockType // AVATAR | STICKER | THEME
+  itemKey   String     // which specific item, e.g. "astronaut-avatar"
+  starCost  Int        // how many stars it cost (for the audit trail)
+
+  createdAt DateTime   @default(now())
+
+  childId   String     @db.ObjectId
+  child     Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  // A child can't own the same item twice.
+  @@unique([childId, type, itemKey])
+  @@index([childId])
+  @@map("unlocks")
 }
