@@ -14,12 +14,12 @@
 
 | Phase | Area | Done / Total |
 |-------|------|--------------|
-| A | Project Setup & Foundation | 8 / 12 |
+| A | Project Setup & Foundation | 9 / 12 |
 | B | Numbers Learning Module | 0 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **8 / 43** |
+| — | **TOTAL** | **9 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -37,7 +37,7 @@
 | A6 | ✅ | `schema03-access-payment-models` | Prisma: `ModuleAccess` + `Payment` models |
 | A7 | ✅ | `schema04-unlock-rewardshop` | Prisma: `Unlock` (reward shop) model |
 | A8 | ✅ | `schema05-mediacontent-lyric` | Prisma: `MediaContent` + embedded `Lyric` type |
-| A9 | ⬜ | `setup04-prisma-client-singleton` | Hot-reload-safe Prisma client singleton |
+| A9 | ✅ | `setup04-prisma-client-singleton` | Hot-reload-safe Prisma client singleton |
 | A10 | ⬜ | `setup05-module-registry` | Central module registry config (one-line to add a module) |
 | A11 | ⬜ | `setup06-access-helpers` | `canAccessModule()` + `unlockedDifficulties()` |
 | A12 | ⬜ | `pwa01-manifest-and-service-worker` | PWA: manifest, service worker, offline caching, next.config |
