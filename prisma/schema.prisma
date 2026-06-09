@@ -1,0 +1,136 @@
+// ===========================================================================
+// Captain Kiddo — Prisma Schema (MongoDB)
+// ===========================================================================
+// This file defines our database shape. Prisma reads it to:
+//   1. Generate a fully type-safe client (`@prisma/client`)
+//   2. Sync the shape to MongoDB via `prisma db push`
+//
+// MongoDB notes:
+//   - We use `db push` (NOT `migrate`) — the MongoDB workflow.
+//   - Every id is a Mongo ObjectId: `@id @default(auto()) @map("_id") @db.ObjectId`
+//   - Every relation's foreign-key field uses `@db.ObjectId`.
+// ===========================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Parent — the ACCOUNT OWNER.
+// One parent owns many children and many payments. Holds the security PIN that
+// gates the paywall/checkout so kids can't trigger purchases.
+// ---------------------------------------------------------------------------
+model Parent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String?
+
+  // The parent PIN is stored HASHED, never in plain text. We compare a hash on
+  // the server when the parent enters their PIN to reach the parent area.
+  pinHash   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations (filled in by later schema tickets):
+  children  Child[]  // one parent -> many children
+
+  @@map("parents")
+}
+
+// ---------------------------------------------------------------------------
+// Child — a KID PROFILE under a parent.
+// Holds the kid's display info and their star balance (the reward currency
+// they spend in the reward shop).
+// ---------------------------------------------------------------------------
+model Child {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  name       String
+  age        Int      // 3–6 for our target audience
+  avatar     String?  // key/url of the chosen avatar image
+
+  // Stars earned across modules; spent in the reward shop. Integer count.
+  totalStars Int      @default(0)
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relation back to the owning parent.
+  parentId   String   @db.ObjectId
+  parent     Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  // A child accumulates progress rows and test results across modules.
+  progress    Progress[]
+  testResults TestResult[]
+
+  @@index([parentId])
+  @@map("children")
+}
+
+// ---------------------------------------------------------------------------
+// Difficulty — the three tiers every learning module has.
+// Unlocked SEQUENTIALLY: MEDIUM only after EASY is completed, HARD after MEDIUM.
+// ---------------------------------------------------------------------------
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ---------------------------------------------------------------------------
+// Progress — TIER-AWARE progress for one child, in one module, at one tier.
+// There is at most ONE row per (child, module, difficulty). When a tier is
+// finished we set isCompleted = true, which unlocks the next tier.
+// ---------------------------------------------------------------------------
+model Progress {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  module      String     // module slug from the registry, e.g. "numbers"
+  difficulty  Difficulty // EASY | MEDIUM | HARD
+
+  isCompleted Boolean    @default(false) // true once this tier is finished
+  starsEarned Int        @default(0)     // stars earned within this tier
+  completedAt DateTime?                  // when the tier was completed (if it was)
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  childId     String     @db.ObjectId
+  child       Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  // One row per child + module + tier. This uniqueness is what makes the
+  // "upsert progress" logic in the learning module safe and simple.
+  @@unique([childId, module, difficulty])
+  @@index([childId])
+  @@map("progress")
+}
+
+// ---------------------------------------------------------------------------
+// TestResult — one quiz ATTEMPT record. We keep every attempt (not just the
+// latest) so the parent dashboard can later derive "weak areas" by comparing
+// attempts vs scores over time.
+// ---------------------------------------------------------------------------
+model TestResult {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  module      String     // which module the quiz belonged to
+  difficulty  Difficulty // which tier the quiz belonged to
+
+  score       Int        // how many the child got right
+  total       Int        // out of how many questions
+  // (score / total) gives the percentage; kept as integers, never a float.
+
+  createdAt   DateTime   @default(now()) // when this attempt happened
+
+  childId     String     @db.ObjectId
+  child       Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@index([childId, module])
+  @@map("test_results")
+}
