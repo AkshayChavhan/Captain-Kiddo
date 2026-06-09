@@ -14,11 +14,12 @@
 
 | Phase | Area | Done / Total |
 |-------|------|--------------|
-| A | Project Setup & Foundation | 0 / 12 |
+| A | Project Setup & Foundation | 1 / 12 |
 | B | Numbers Learning Module | 0 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
-| — | **TOTAL** | **0 / 37** |
+| E | Alphabet Tracing (learn to write) | 0 / 6 |
+| — | **TOTAL** | **1 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -28,7 +29,7 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| A1 | ⬜ | `setup01-folder-structure` | Create the full Next.js + project folder layout |
+| A1 | ✅ | `setup01-folder-structure` | Create the full Next.js + project folder layout |
 | A2 | ⬜ | `setup02-dependencies` | Install & document all stack dependencies |
 | A3 | ⬜ | `setup03-env-template` | `.env.example` template + setup commands |
 | A4 | ⬜ | `schema01-parent-child-models` | Prisma: `Parent` & `Child` models |
@@ -86,6 +87,23 @@
 | D7 | ⬜ | `pay02-razorpay-checkout` | Razorpay checkout on client |
 | D8 | ⬜ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |
 | D9 | ⬜ | `shop01-reward-shop` | Reward shop: spend stars to unlock cosmetics |
+
+---
+
+## 🅴 Phase E — Alphabet Tracing (learn to write) ✍️
+
+> Kids learn to **write** letters by dragging a finger along the letter shape on a
+> touchscreen. A wrong move (finger off the path) **blinks the screen red 3 times**,
+> then they retry. Built reusable for uppercase, lowercase, and later numbers.
+
+| # | Status | Commit / Doc name | What it does |
+|---|--------|-------------------|--------------|
+| E1 | ⬜ | `trace01-trace-canvas` | A reusable canvas that captures finger/pointer drag paths (touch + mouse) |
+| E2 | ⬜ | `trace02-letter-guide-paths` | Letter outline guide data (stroke paths per letter, A–Z) |
+| E3 | ⬜ | `trace03-on-path-detection` | Detect if the finger stays ON the letter path vs goes off |
+| E4 | ⬜ | `trace04-red-blink-feedback` | Blink the screen red **3 times** on a mistake, then reset for retry |
+| E5 | ⬜ | `trace05-success-and-audio` | Success celebration + audio-first letter sound & voice guidance |
+| E6 | ⬜ | `trace06-letter-flow-progress` | One-letter-at-a-time flow + save tracing progress to `Progress` |
 
 ---
 

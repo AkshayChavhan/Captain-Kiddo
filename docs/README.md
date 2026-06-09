@@ -30,6 +30,7 @@ docs/
 ├── schema/                ← schema0X-* (Prisma models, one topic each)
 ├── theme/                 ← theme0X-*  (Tailwind kid theme, UI primitives)
 ├── numbers/               ← numbers0X-* (the Numbers module, our reusable template)
+├── trace/                 ← trace0X-*  (finger-tracing: learn to write letters)
 ├── media/                 ← media0X-*  (sing-along, lullaby, sleep stories)
 ├── parent/                ← parent0X-* (parent dashboard, PIN, child profiles)
 ├── pay/                   ← pay0X-*    (Razorpay create-order, checkout, verify)

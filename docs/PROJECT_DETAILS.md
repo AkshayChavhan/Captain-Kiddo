@@ -117,6 +117,22 @@ Alphabets, Animals, etc.
   `ModuleAccess` (atomic). Bundle option included.
 - **Reward shop:** kids spend stars to unlock cosmetics.
 
+### Phase E — Alphabet Tracing (learn to write) ✍️
+A **finger-tracing writing activity** for the Alphabets module. Kids learn to
+*write* letters, not just recognize them.
+
+- Show **one letter at a time** on screen as a guide outline.
+- On a **touchscreen**, the child **drags their finger along the letter's shape**
+  to "write" it, following the correct stroke path.
+- ✅ **Correct trace** (finger stays on the path) → celebratory feedback + move to
+  the next letter.
+- ❌ **Mistake** (finger goes off the path) → the **screen blinks red 3 times** as
+  gentle "try again" feedback, then the child retries the same letter.
+- Audio-first: the letter's sound plays as it appears, and an encouraging voice
+  guides the child.
+- Built to be reused for both **uppercase and lowercase**, and easy to extend to
+  numbers later.
+
 ---
 
 ## 7. Branch Strategy
@@ -140,6 +156,7 @@ learning-doc filename are **identical**.
 | Authentication | `auth01-`, `auth02-`… | `auth01-login-page` |
 | Theme / UI | `theme01-`, `theme02-`… | `theme01-tailwind-config` |
 | Numbers module | `numbers01-`… | `numbers01-module-home` |
+| Alphabet tracing | `trace01-`… | `trace01-trace-canvas` |
 | Media | `media01-`… | `media01-audio-player` |
 | Parent / payments | `parent01-`, `pay01-`… | `pay01-create-order-api` |
 | Reward shop | `shop01-`… | `shop01-star-balance` |
