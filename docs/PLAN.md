@@ -14,12 +14,12 @@
 
 | Phase | Area | Done / Total |
 |-------|------|--------------|
-| A | Project Setup & Foundation | 10 / 12 |
+| A | Project Setup & Foundation | 11 / 12 |
 | B | Numbers Learning Module | 0 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **10 / 43** |
+| — | **TOTAL** | **11 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -39,7 +39,7 @@
 | A8 | ✅ | `schema05-mediacontent-lyric` | Prisma: `MediaContent` + embedded `Lyric` type |
 | A9 | ✅ | `setup04-prisma-client-singleton` | Hot-reload-safe Prisma client singleton |
 | A10 | ✅ | `setup05-module-registry` | Central module registry config (one-line to add a module) |
-| A11 | ⬜ | `setup06-access-helpers` | `canAccessModule()` + `unlockedDifficulties()` |
+| A11 | ✅ | `setup06-access-helpers` | `canAccessModule()` + `unlockedDifficulties()` |
 | A12 | ⬜ | `pwa01-manifest-and-service-worker` | PWA: manifest, service worker, offline caching, next.config |
 
 ---
