@@ -65,6 +65,72 @@ model Child {
   parentId   String   @db.ObjectId
   parent     Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
 
+  // A child accumulates progress rows and test results across modules.
+  progress    Progress[]
+  testResults TestResult[]
+
   @@index([parentId])
   @@map("children")
+}
+
+// ---------------------------------------------------------------------------
+// Difficulty — the three tiers every learning module has.
+// Unlocked SEQUENTIALLY: MEDIUM only after EASY is completed, HARD after MEDIUM.
+// ---------------------------------------------------------------------------
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+// ---------------------------------------------------------------------------
+// Progress — TIER-AWARE progress for one child, in one module, at one tier.
+// There is at most ONE row per (child, module, difficulty). When a tier is
+// finished we set isCompleted = true, which unlocks the next tier.
+// ---------------------------------------------------------------------------
+model Progress {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  module      String     // module slug from the registry, e.g. "numbers"
+  difficulty  Difficulty // EASY | MEDIUM | HARD
+
+  isCompleted Boolean    @default(false) // true once this tier is finished
+  starsEarned Int        @default(0)     // stars earned within this tier
+  completedAt DateTime?                  // when the tier was completed (if it was)
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  childId     String     @db.ObjectId
+  child       Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  // One row per child + module + tier. This uniqueness is what makes the
+  // "upsert progress" logic in the learning module safe and simple.
+  @@unique([childId, module, difficulty])
+  @@index([childId])
+  @@map("progress")
+}
+
+// ---------------------------------------------------------------------------
+// TestResult — one quiz ATTEMPT record. We keep every attempt (not just the
+// latest) so the parent dashboard can later derive "weak areas" by comparing
+// attempts vs scores over time.
+// ---------------------------------------------------------------------------
+model TestResult {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+
+  module      String     // which module the quiz belonged to
+  difficulty  Difficulty // which tier the quiz belonged to
+
+  score       Int        // how many the child got right
+  total       Int        // out of how many questions
+  // (score / total) gives the percentage; kept as integers, never a float.
+
+  createdAt   DateTime   @default(now()) // when this attempt happened
+
+  childId     String     @db.ObjectId
+  child       Child      @relation(fields: [childId], references: [id], onDelete: Cascade)
+
+  @@index([childId, module])
+  @@map("test_results")
 }

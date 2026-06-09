@@ -14,12 +14,12 @@
 
 | Phase | Area | Done / Total |
 |-------|------|--------------|
-| A | Project Setup & Foundation | 4 / 12 |
+| A | Project Setup & Foundation | 5 / 12 |
 | B | Numbers Learning Module | 0 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **4 / 43** |
+| — | **TOTAL** | **5 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -33,7 +33,7 @@
 | A2 | ✅ | `setup02-dependencies` | Install & document all stack dependencies |
 | A3 | ✅ | `setup03-env-template` | `.env.example` template + setup commands |
 | A4 | ✅ | `schema01-parent-child-models` | Prisma: `Parent` & `Child` models |
-| A5 | ⬜ | `schema02-progress-testresult` | Prisma: tier-aware `Progress` + `TestResult` |
+| A5 | ✅ | `schema02-progress-testresult` | Prisma: tier-aware `Progress` + `TestResult` |
 | A6 | ⬜ | `schema03-access-payment-models` | Prisma: `ModuleAccess` + `Payment` models |
 | A7 | ⬜ | `schema04-unlock-rewardshop` | Prisma: `Unlock` (reward shop) model |
 | A8 | ⬜ | `schema05-mediacontent-lyric` | Prisma: `MediaContent` + embedded `Lyric` type |
