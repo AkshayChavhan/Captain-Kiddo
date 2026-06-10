@@ -4,8 +4,10 @@ import { prisma } from "@/lib/prisma";
 import { getChildProgressSummary } from "@/lib/progressSummary";
 import { getChildWeakAreas } from "@/lib/weakAreas";
 import { getTodayLevelsCompleted } from "@/lib/dailyGoal";
+import { BUNDLE_SLUG } from "@/config/modules";
 import { DEFAULT_AVATAR } from "@/config/avatars";
 import { PinPad } from "@/components/parent/PinPad";
+import { UnlockModules } from "@/components/parent/UnlockModules";
 import {
   ChildProfiles,
   type ChildSummary,
@@ -61,6 +63,16 @@ export default async function ParentPage() {
     })
   );
 
+  // What modules has this parent already unlocked? (For the buy section.)
+  const access = parentId
+    ? await prisma.moduleAccess.findMany({
+        where: { parentId },
+        select: { module: true },
+      })
+    : [];
+  const unlockedSlugs = access.map((a) => a.module);
+  const hasBundle = unlockedSlugs.includes(BUNDLE_SLUG);
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-6 p-6">
       <header className="pt-6 text-center">
@@ -92,7 +104,10 @@ export default async function ParentPage() {
         </section>
       )}
 
-      {/* Payments and the reward shop come in pay01–pay03, shop01. */}
+      {/* Buy / unlock modules (Razorpay checkout) */}
+      <UnlockModules unlockedSlugs={unlockedSlugs} hasBundle={hasBundle} />
+
+      {/* The reward shop comes in shop01. */}
     </main>
   );
 }
