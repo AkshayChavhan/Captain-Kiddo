@@ -17,9 +17,9 @@
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
 | C | Media Playback | 7 / 7 ✅ |
-| D | Parent Dashboard & Payments | 4 / 9 |
+| D | Parent Dashboard & Payments | 5 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **32 / 43** |
+| — | **TOTAL** | **33 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -82,7 +82,7 @@
 | D2 | ✅ | `parent02-child-profiles` | Manage multiple child profiles (name, age, avatar) |
 | D3 | ✅ | `parent03-progress-dashboard` | Per-child progress: modules, tiers, stars |
 | D4 | ✅ | `parent04-weak-areas` | Derive "weak areas" from TestResult attempts vs score |
-| D5 | ⬜ | `parent05-daily-goals` | Set daily learning goals |
+| D5 | ✅ | `parent05-daily-goals` | Set daily learning goals |
 | D6 | ⬜ | `pay01-create-order-api` | Create-order API → PENDING Payment (500 paise) |
 | D7 | ⬜ | `pay02-razorpay-checkout` | Razorpay checkout on client |
 | D8 | ⬜ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |

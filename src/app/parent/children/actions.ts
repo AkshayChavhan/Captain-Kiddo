@@ -73,3 +73,25 @@ export async function removeChild(childId: string): Promise<ActionResult> {
   revalidatePath("/parent");
   return { ok: true };
 }
+
+export async function setDailyGoal(
+  childId: string,
+  goal: number
+): Promise<ActionResult> {
+  const guard = await requireParent();
+  if (!guard.ok) return { ok: false, error: guard.error };
+
+  if (!Number.isInteger(goal) || goal < 0 || goal > 20) {
+    return { ok: false, error: "Goal must be between 0 and 20." };
+  }
+
+  // Scope the update to this parent's child so it can't touch another account's.
+  const res = await prisma.child.updateMany({
+    where: { id: childId, parentId: guard.parentId },
+    data: { dailyGoal: goal },
+  });
+  if (res.count === 0) return { ok: false, error: "Child not found." };
+
+  revalidatePath("/parent");
+  return { ok: true };
+}

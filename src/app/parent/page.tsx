@@ -3,6 +3,7 @@ import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
 import { getChildProgressSummary } from "@/lib/progressSummary";
 import { getChildWeakAreas } from "@/lib/weakAreas";
+import { getTodayLevelsCompleted } from "@/lib/dailyGoal";
 import { DEFAULT_AVATAR } from "@/config/avatars";
 import { PinPad } from "@/components/parent/PinPad";
 import {
@@ -10,6 +11,7 @@ import {
   type ChildSummary,
 } from "@/components/parent/ChildProfiles";
 import { ChildProgress } from "@/components/parent/ChildProgress";
+import { DailyGoal } from "@/components/parent/DailyGoal";
 
 /**
  * Parent area entry — /parent
@@ -35,19 +37,27 @@ export default async function ParentPage() {
   const children: ChildSummary[] = parentId
     ? await prisma.child.findMany({
         where: { parentId },
-        select: { id: true, name: true, age: true, avatar: true, totalStars: true },
+        select: {
+          id: true,
+          name: true,
+          age: true,
+          avatar: true,
+          totalStars: true,
+          dailyGoal: true,
+        },
         orderBy: { createdAt: "asc" },
       })
     : [];
 
-  // Per-child progress summaries + weak areas (fetched in parallel).
+  // Per-child progress summaries + weak areas + today's goal progress (parallel).
   const progress = await Promise.all(
     children.map(async (c) => {
-      const [summary, weakAreas] = await Promise.all([
+      const [summary, weakAreas, completedToday] = await Promise.all([
         getChildProgressSummary(c.id),
         getChildWeakAreas(c.id),
+        getTodayLevelsCompleted(c.id),
       ]);
-      return { child: c, summary, weakAreas };
+      return { child: c, summary, weakAreas, completedToday };
     })
   );
 
@@ -64,20 +74,25 @@ export default async function ParentPage() {
       {progress.length > 0 && (
         <section className="flex w-full max-w-md flex-col gap-4">
           <h2 className="font-kiddo text-2xl font-bold">Progress</h2>
-          {progress.map(({ child, summary, weakAreas }) => (
-            <ChildProgress
-              key={child.id}
-              name={child.name}
-              avatar={child.avatar ?? DEFAULT_AVATAR}
-              summary={summary}
-              weakAreas={weakAreas}
-            />
+          {progress.map(({ child, summary, weakAreas, completedToday }) => (
+            <div key={child.id} className="flex flex-col gap-2">
+              <ChildProgress
+                name={child.name}
+                avatar={child.avatar ?? DEFAULT_AVATAR}
+                summary={summary}
+                weakAreas={weakAreas}
+              />
+              <DailyGoal
+                childId={child.id}
+                goal={child.dailyGoal}
+                completedToday={completedToday}
+              />
+            </div>
           ))}
         </section>
       )}
 
-      {/* Weak areas, daily goals, payments, and the reward shop come in
-          parent04–parent05, pay01–pay03, shop01. */}
+      {/* Payments and the reward shop come in pay01–pay03, shop01. */}
     </main>
   );
 }
