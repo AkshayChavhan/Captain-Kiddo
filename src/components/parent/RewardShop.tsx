@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { SHOP_ITEMS } from "@/config/shop";
 import { buyWithStars } from "@/app/parent/shop/actions";
+import { DashboardSection } from "@/components/parent/DashboardSection";
 
 /** Minimal child shape the shop needs (id, name, star balance). */
 export interface ShopChild {
@@ -34,10 +35,9 @@ export function RewardShop({
 
   if (childrenList.length === 0) {
     return (
-      <section className="flex w-full max-w-md flex-col gap-2">
-        <h2 className="font-kiddo text-2xl font-bold">Reward Shop</h2>
+      <DashboardSection emoji="🎁" title="Reward Shop" accent="bg-kiddo-pink">
         <p className="text-gray-500">Add a child to use the reward shop.</p>
-      </section>
+      </DashboardSection>
     );
   }
 
@@ -58,9 +58,7 @@ export function RewardShop({
   };
 
   return (
-    <section className="flex w-full max-w-md flex-col gap-3">
-      <h2 className="font-kiddo text-2xl font-bold">Reward Shop</h2>
-
+    <DashboardSection emoji="🎁" title="Reward Shop" accent="bg-kiddo-pink">
       {/* Pick which child is spending */}
       <div className="flex flex-wrap gap-2">
         {childrenList.map((c) => (
@@ -111,6 +109,6 @@ export function RewardShop({
           );
         })}
       </div>
-    </section>
+    </DashboardSection>
   );
 }

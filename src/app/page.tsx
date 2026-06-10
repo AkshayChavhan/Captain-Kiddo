@@ -3,6 +3,7 @@ import { MODULES } from "@/config/modules";
 import { getActiveParentId } from "@/lib/activeParent";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { SlideToParent } from "@/components/parent/SlideToParent";
+import { AnimatedBackground } from "@/components/shared/AnimatedBackground";
 
 /**
  * Home page (route "/") — the module grid.

@@ -1,5 +1,6 @@
 import { getPaidModules, BUNDLE_SLUG, BUNDLE_PRICE_IN_PAISE } from "@/config/modules";
 import { BuyButton } from "@/components/parent/BuyButton";
+import { DashboardSection } from "@/components/parent/DashboardSection";
 
 /**
  * UnlockModules — the parent's "buy modules" section (server component).
@@ -15,32 +16,22 @@ export function UnlockModules({
   unlockedSlugs: string[];
   hasBundle: boolean;
 }>) {
-  // If the parent owns the "ALL" bundle, everything is unlocked — nothing to sell.
-  if (hasBundle) {
-    return (
-      <section className="flex w-full max-w-md flex-col gap-2">
-        <h2 className="font-kiddo text-2xl font-bold">Modules</h2>
-        <p className="text-gray-500">All modules unlocked! 🎉</p>
-      </section>
-    );
-  }
-
   const unlocked = new Set(unlockedSlugs);
   const buyable = getPaidModules().filter((m) => !unlocked.has(m.slug));
 
-  if (buyable.length === 0) {
+  // Bundle owned, or nothing left to buy -> celebratory "all unlocked" card.
+  if (hasBundle || buyable.length === 0) {
     return (
-      <section className="flex w-full max-w-md flex-col gap-2">
-        <h2 className="font-kiddo text-2xl font-bold">Modules</h2>
-        <p className="text-gray-500">All modules unlocked! 🎉</p>
-      </section>
+      <DashboardSection emoji="🔓" title="Modules" accent="bg-kiddo-green">
+        <p className="text-center text-lg font-bold text-kiddo-green">
+          All modules unlocked! 🎉
+        </p>
+      </DashboardSection>
     );
   }
 
   return (
-    <section className="flex w-full max-w-md flex-col gap-3">
-      <h2 className="font-kiddo text-2xl font-bold">Unlock modules</h2>
-
+    <DashboardSection emoji="🛒" title="Unlock modules" accent="bg-kiddo-orange">
       {/* The bundle — best value, shown first. */}
       <BuyButton
         target={BUNDLE_SLUG}
@@ -58,6 +49,6 @@ export function UnlockModules({
           priceInPaise={m.priceInPaise}
         />
       ))}
-    </section>
+    </DashboardSection>
   );
 }

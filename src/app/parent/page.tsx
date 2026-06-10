@@ -14,6 +14,7 @@ import {
 } from "@/components/parent/ChildProfiles";
 import { ChildProgress } from "@/components/parent/ChildProgress";
 import { DailyGoal } from "@/components/parent/DailyGoal";
+import { DashboardSection } from "@/components/parent/DashboardSection";
 
 /**
  * Parent area entry — /parent
@@ -88,18 +89,20 @@ export default async function ParentPage() {
   }));
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-6 p-6">
-      <header className="pt-6 text-center">
-        <h1 className="font-kiddo text-3xl font-bold">Parent Dashboard</h1>
-        <p className="text-gray-600">Welcome back! 👋</p>
+    <main className="flex min-h-screen flex-col items-center gap-6 bg-gradient-to-b from-kiddo-yellow/40 via-kiddo-pink/20 to-kiddo-teal/30 p-6">
+      <header className="flex flex-col items-center gap-1 pt-4 text-center">
+        <div className="text-6xl">🧑‍🍼</div>
+        <h1 className="font-kiddo text-4xl font-bold text-kiddo-purple">
+          Parent Dashboard
+        </h1>
+        <p className="text-lg font-bold text-gray-600">Welcome back! 👋</p>
       </header>
 
       <ChildProfiles kids={children} />
 
       {/* Per-child progress */}
       {progress.length > 0 && (
-        <section className="flex w-full max-w-md flex-col gap-4">
-          <h2 className="font-kiddo text-2xl font-bold">Progress</h2>
+        <DashboardSection emoji="📊" title="Progress" accent="bg-kiddo-purple">
           {progress.map(({ child, summary, weakAreas, completedToday }) => (
             <div key={child.id} className="flex flex-col gap-2">
               <ChildProgress
@@ -115,7 +118,7 @@ export default async function ParentPage() {
               />
             </div>
           ))}
-        </section>
+        </DashboardSection>
       )}
 
       {/* Buy / unlock modules (Razorpay checkout) */}

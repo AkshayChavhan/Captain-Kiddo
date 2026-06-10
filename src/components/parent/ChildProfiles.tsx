@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AVATARS, DEFAULT_AVATAR } from "@/config/avatars";
 import { addChild, removeChild } from "@/app/parent/children/actions";
+import { DashboardSection } from "@/components/parent/DashboardSection";
 
 /** The child shape the dashboard passes in (already fetched on the server). */
 export interface ChildSummary {
@@ -59,9 +60,7 @@ export function ChildProfiles({
   };
 
   return (
-    <section className="flex w-full max-w-md flex-col gap-4">
-      <h2 className="font-kiddo text-2xl font-bold">Children</h2>
-
+    <DashboardSection emoji="👶" title="Children" accent="bg-kiddo-teal">
       {/* Existing profiles */}
       <div className="flex flex-col gap-3">
         {kids.length === 0 && (
@@ -161,6 +160,6 @@ export function ChildProfiles({
           ➕ Add a child
         </button>
       )}
-    </section>
+    </DashboardSection>
   );
 }
