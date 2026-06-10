@@ -15,11 +15,11 @@
 | Phase | Area | Done / Total |
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
-| B | Numbers Learning Module | 0 / 9 |
+| B | Numbers Learning Module | 1 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **12 / 43** |
+| — | **TOTAL** | **13 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -48,7 +48,7 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| B1 | ⬜ | `theme01-tailwind-kid-theme` | Tailwind kid-friendly theme (colors, rounded, big targets) |
+| B1 | ✅ | `theme01-tailwind-kid-theme` | Tailwind kid-friendly theme (colors, rounded, big targets) |
 | B2 | ⬜ | `numbers01-module-home-tiers` | Module home: 3 tiers with 🔒 on locked tiers |
 | B3 | ⬜ | `numbers02-learning-view-card` | Big number card + object-counting visuals |
 | B4 | ⬜ | `numbers03-howler-audio-taps` | Tap-to-play audio with Howler |

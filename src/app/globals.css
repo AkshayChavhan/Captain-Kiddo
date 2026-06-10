@@ -2,9 +2,36 @@
  * Global styles.
  *
  * Tailwind's three directives below pull in its base reset, component classes,
- * and utility classes. We customize the kid-friendly theme (colors, rounded
- * shapes, big tap targets) in the `theme01-tailwind-kid-theme` ticket.
+ * and utility classes. The @layer blocks add our kid-friendly base behavior and
+ * a couple of reusable component classes used across screens.
  */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Kid-friendly defaults applied to the whole app. */
+  html,
+  body {
+    /* Prevent text selection / long-press menus that confuse young kids. */
+    -webkit-user-select: none;
+    user-select: none;
+    /* Disable the tap-highlight flash on touch. */
+    -webkit-tap-highlight-color: transparent;
+    /* Stop pull-to-refresh / bounce so the "app" feels native. */
+    overscroll-behavior: none;
+  }
+}
+
+@layer components {
+  /* A big, round, bouncy button — the standard kid tap target. */
+  .kiddo-btn {
+    @apply min-w-tap min-h-tap rounded-kiddo px-6 py-4 text-2xl font-bold
+           text-white shadow-lg transition-transform active:scale-95;
+  }
+
+  /* A soft, rounded surface for grouping content. */
+  .kiddo-card {
+    @apply rounded-blob bg-white p-6 shadow-xl;
+  }
+}
