@@ -31,6 +31,14 @@ export default function HomePage() {
             </div>
           </Link>
         ))}
+
+        {/* Alphabet tracing activity (learn to write letters). */}
+        <Link href="/trace" className="block">
+          <div className="kiddo-card flex min-h-tap flex-col items-center justify-center gap-2 bg-kiddo-pink text-center text-white">
+            <div className="text-5xl">✍️</div>
+            <div className="text-xl font-bold">Trace Letters</div>
+          </div>
+        </Link>
       </section>
     </main>
   );

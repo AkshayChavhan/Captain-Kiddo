@@ -18,8 +18,8 @@
 | B | Numbers Learning Module | 9 / 9 ✅ |
 | C | Media Playback | 7 / 7 ✅ |
 | D | Parent Dashboard & Payments | 9 / 9 ✅ |
-| E | Alphabet Tracing (learn to write) | 5 / 6 |
-| — | **TOTAL** | **42 / 43** |
+| E | Alphabet Tracing (learn to write) | 6 / 6 ✅ |
+| — | **TOTAL** | **43 / 43** 🎉 |
 
 > Update these counts as tickets are completed.
 
@@ -103,7 +103,7 @@
 | E3 | ✅ | `trace03-on-path-detection` | Detect if the finger stays ON the letter path vs goes off |
 | E4 | ✅ | `trace04-red-blink-feedback` | Blink the screen red **3 times** on a mistake, then reset for retry |
 | E5 | ✅ | `trace05-success-and-audio` | Success celebration + audio-first letter sound & voice guidance |
-| E6 | ⬜ | `trace06-letter-flow-progress` | One-letter-at-a-time flow + save tracing progress to `Progress` |
+| E6 | ✅ | `trace06-letter-flow-progress` | One-letter-at-a-time flow + save tracing progress to `Progress` |
 
 ---
 
