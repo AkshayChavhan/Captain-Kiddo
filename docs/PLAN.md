@@ -15,11 +15,11 @@
 | Phase | Area | Done / Total |
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
-| B | Numbers Learning Module | 5 / 9 |
-| C | Media Playback | 0 / 7 |
+| B | Numbers Learning Module | 9 / 9 ✅ |
+| C | Media Playback | 4 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **17 / 43** |
+| — | **TOTAL** | **25 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -53,10 +53,10 @@
 | B3 | ✅ | `numbers02-learning-view-card` | Big number card + object-counting visuals |
 | B4 | ✅ | `numbers03-howler-audio-taps` | Tap-to-play audio with Howler |
 | B5 | ✅ | `numbers04-framer-animations` | Bounce/scale Framer Motion animations |
-| B6 | ⬜ | `numbers05-quiz-tap-answer` | Quiz: tap-the-correct-answer + star rewards |
-| B7 | ⬜ | `numbers06-quiz-drag-drop` | Quiz: drag-and-drop numeral↔quantity matching |
-| B8 | ⬜ | `numbers07-celebration-confetti` | Confetti / star-burst celebration + audio feedback |
-| B9 | ⬜ | `numbers08-save-progress-api` | Save Progress (upsert), unlock next tier, award stars + API routes |
+| B6 | ✅ | `numbers05-quiz-tap-answer` | Quiz: tap-the-correct-answer + star rewards |
+| B7 | ✅ | `numbers06-quiz-drag-drop` | Quiz: drag-and-drop numeral↔quantity matching |
+| B8 | ✅ | `numbers07-celebration-confetti` | Confetti / star-burst celebration + audio feedback |
+| B9 | ✅ | `numbers08-save-progress-api` | Save Progress (upsert), unlock next tier, award stars + API routes |
 
 ---
 
@@ -64,10 +64,10 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| C1 | ⬜ | `media01-shared-audio-player` | Shared Howler-based `AudioPlayer` component |
-| C2 | ⬜ | `media02-content-gating` | Respect `isFree`/`priceInPaise` gating from `MediaContent` |
-| C3 | ⬜ | `media03-singalong-player` | Sing-along player base (load song + lyrics) |
-| C4 | ⬜ | `media04-lyric-sync-highlight` | Karaoke lyric sync (rAF + startSec/endSec) + bouncing ball |
+| C1 | ✅ | `media01-shared-audio-player` | Shared Howler-based `AudioPlayer` component |
+| C2 | ✅ | `media02-content-gating` | Respect `isFree`/`priceInPaise` gating from `MediaContent` |
+| C3 | ✅ | `media03-singalong-player` | Sing-along player base (load song + lyrics) |
+| C4 | ✅ | `media04-lyric-sync-highlight` | Karaoke lyric sync (rAF + startSec/endSec) + bouncing ball |
 | C5 | ⬜ | `media05-singalong-mascot` | Dancing Captain Kiddo mascot |
 | C6 | ⬜ | `media06-lullaby-sleep-timer` | Lullaby calming player + sleep timer (fade → pause) |
 | C7 | ⬜ | `media07-sleep-stories-player` | Sleep-story narrated player + gentle scene animation |
