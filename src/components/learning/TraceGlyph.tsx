@@ -6,10 +6,10 @@ import { GlyphGuide } from "@/components/learning/GlyphGuide";
 import { RedBlinkOverlay } from "@/components/learning/RedBlinkOverlay";
 import { Celebration } from "@/components/shared/Celebration";
 import { useRedBlink } from "@/hooks/useRedBlink";
-import { useSound } from "@/hooks/useSound";
+import { useSpeak } from "@/hooks/useSpeak";
 import { useCelebration } from "@/hooks/useCelebration";
+import { speak } from "@/lib/speak";
 import { scaleStrokes, type LetterStrokes } from "@/config/letterPaths";
-import { FEEDBACK_AUDIO } from "@/config/audio";
 import { isPointOnPath, traceCoverage } from "@/lib/trace";
 
 const SIZE = 320;
@@ -18,10 +18,10 @@ const COVERAGE_TO_PASS = 0.7;
 /**
  * TraceGlyph — trace ANY glyph (letter or number) with red-blink-on-mistake and a
  * success celebration. This is the generic engine: it takes the glyph's strokes,
- * its spoken-audio src, and a label as props, so letters AND numbers reuse it.
+ * the word to SPEAK, and a label as props, so letters AND numbers reuse it.
  *
- * Behavior (identical to the letter tracer):
- *  - speaks the glyph on appear (audio-first), tap label to replay
+ * Behavior:
+ *  - speaks the glyph on appear (browser TTS), tap label to replay
  *  - on each move point, checks on-path (trace.ts); first off-path point ->
  *    "Try again!" + screen blinks RED 3x
  *  - on stroke end, if stayed on path AND covered >=70% -> "Great job!" +
@@ -29,12 +29,13 @@ const COVERAGE_TO_PASS = 0.7;
  */
 export function TraceGlyph({
   strokes,
-  audioSrc,
+  speakText,
   promptLabel,
   onComplete,
 }: Readonly<{
   strokes: LetterStrokes;
-  audioSrc: string;
+  /** The word spoken aloud, e.g. "A" or "three". */
+  speakText: string;
   /** e.g. "Trace the A!" or "Trace the 3!" */
   promptLabel: string;
   onComplete?: () => void;
@@ -42,10 +43,8 @@ export function TraceGlyph({
   const { blinking, blink } = useRedBlink({ times: 3 });
   const { celebrating, celebrate } = useCelebration();
 
-  // Speak the glyph on appear (audio-first); tap the label to replay.
-  const playGlyph = useSound(audioSrc, { autoplay: true });
-  const playGreat = useSound(FEEDBACK_AUDIO.correct);
-  const playTryAgain = useSound(FEEDBACK_AUDIO.wrong);
+  // Speak the glyph on appear (TTS); tap the label to replay.
+  const sayGlyph = useSpeak(speakText, { onAppear: true });
 
   const scaled = useMemo(() => scaleStrokes(strokes, SIZE), [strokes]);
 
@@ -60,7 +59,7 @@ export function TraceGlyph({
     if (wentOffRef.current || doneRef.current) return;
     if (!isPointOnPath(point, scaled)) {
       wentOffRef.current = true;
-      playTryAgain();
+      speak("Try again!");
       blink();
     }
   };
@@ -69,7 +68,7 @@ export function TraceGlyph({
     if (doneRef.current || wentOffRef.current) return;
     if (traceCoverage(path, scaled) >= COVERAGE_TO_PASS) {
       doneRef.current = true;
-      playGreat();
+      speak("Great job!");
       celebrate();
       onComplete?.();
     }
@@ -82,7 +81,7 @@ export function TraceGlyph({
 
       <button
         type="button"
-        onClick={() => playGlyph()}
+        onClick={() => sayGlyph()}
         className="font-kiddo text-2xl font-bold"
         aria-label={promptLabel}
       >

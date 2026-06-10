@@ -5,7 +5,12 @@ import Link from "next/link";
 import { Difficulty } from "@prisma/client";
 import { TraceGlyph } from "@/components/learning/TraceGlyph";
 import { TRACEABLE_NUMBERS, getNumberStrokes } from "@/config/numberPaths";
-import { numberAudio } from "@/config/audio";
+
+/** Digit -> spoken word, so the glyph "3" is read as "three". */
+const DIGIT_WORDS: Record<string, string> = {
+  "0": "zero", "1": "one", "2": "two", "3": "three", "4": "four",
+  "5": "five", "6": "six", "7": "seven", "8": "eight", "9": "nine",
+};
 
 /**
  * NumberTraceActivity — trace the digits 0–9 one at a time to learn to WRITE them.
@@ -88,7 +93,7 @@ export function NumberTraceActivity({
       <TraceGlyph
         key={current}
         strokes={strokes}
-        audioSrc={numberAudio(Number(current))}
+        speakText={DIGIT_WORDS[current] ?? current}
         promptLabel={`Trace the ${current}!`}
         onComplete={handleComplete}
       />

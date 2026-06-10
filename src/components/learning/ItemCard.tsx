@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useSound } from "@/hooks/useSound";
+import { useSpeak } from "@/hooks/useSpeak";
 import type { ContentItem } from "@/config/moduleContent";
 
 /**
@@ -10,13 +10,13 @@ import type { ContentItem } from "@/config/moduleContent";
  * Generalized from NumberCard: shows an item's big label plus `count` copies of
  * its emoji (numbers count out N apples; colors/letters show one visual).
  *
- * AUDIO-FIRST: the item's name plays automatically when the card appears (kids
- * can't read), and tapping the card replays it. `autoplay` waits for the clip to
- * load before playing. LearningView keys the card by index, so each new item
- * remounts -> speaks on arrival.
+ * AUDIO-FIRST: the item's name is SPOKEN (browser text-to-speech) automatically
+ * when the card appears (kids can't read), and tapping the card says it again.
+ * No audio files — the device reads item.speak out loud. LearningView keys the
+ * card by index, so each new item remounts -> speaks on arrival.
  */
 export function ItemCard({ item }: Readonly<{ item: ContentItem }>) {
-  const play = useSound(item.audio, { autoplay: true });
+  const say = useSpeak(item.speak, { onAppear: true });
   const emojiKeys = Array.from(
     { length: Math.max(1, item.count) },
     (_, i) => `e-${i}`
@@ -25,7 +25,7 @@ export function ItemCard({ item }: Readonly<{ item: ContentItem }>) {
   return (
     <motion.button
       type="button"
-      onClick={() => play()}
+      onClick={() => say()}
       aria-label={item.label}
       className="kiddo-card flex min-h-tap w-full max-w-sm flex-col items-center gap-4 bg-white"
       whileTap={{ scale: 0.96 }}

@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useSound } from "@/hooks/useSound";
-import { FEEDBACK_AUDIO } from "@/config/audio";
+import { speak } from "@/lib/speak";
 import { useQuizStore } from "@/store/quizStore";
 import { makeTapQuestion, type TapQuestion } from "@/lib/quiz";
 import { Celebration } from "@/components/shared/Celebration";
@@ -36,8 +35,6 @@ export function TapQuiz({
   const addWrong = useQuizStore((s) => s.addWrong);
   const stars = useQuizStore((s) => s.stars);
 
-  const playCorrect = useSound(FEEDBACK_AUDIO.correct);
-  const playWrong = useSound(FEEDBACK_AUDIO.wrong);
   const { celebrating, celebrate } = useCelebration();
 
   const [question, setQuestion] = useState<TapQuestion | null>(null);
@@ -54,7 +51,7 @@ export function TapQuiz({
 
   const handlePick = (picked: number) => {
     if (picked === question.answer) {
-      playCorrect();
+      speak("Great job!");
       celebrate(); // star-burst on a correct answer
       addCorrect();
       const next = solved + 1;
@@ -63,7 +60,7 @@ export function TapQuiz({
       if (next >= QUESTIONS_PER_QUIZ) onFinish?.();
       // advancing `solved` triggers the effect to build the next question
     } else {
-      playWrong();
+      speak("Try again!");
       addWrong();
       setWrongPick(picked);
       // clear the red flash shortly after

@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useSound } from "@/hooks/useSound";
-import { FEEDBACK_AUDIO } from "@/config/audio";
+import { speak } from "@/lib/speak";
 import { useQuizStore } from "@/store/quizStore";
 import { makeTapQuestion, type TapQuestion } from "@/lib/quiz";
 import { Celebration } from "@/components/shared/Celebration";
@@ -36,8 +35,6 @@ export function DragDropQuiz({
   const addWrong = useQuizStore((s) => s.addWrong);
   const stars = useQuizStore((s) => s.stars);
 
-  const playCorrect = useSound(FEEDBACK_AUDIO.correct);
-  const playWrong = useSound(FEEDBACK_AUDIO.wrong);
   const { celebrating, celebrate } = useCelebration();
 
   const [question, setQuestion] = useState<TapQuestion | null>(null);
@@ -69,14 +66,14 @@ export function DragDropQuiz({
     });
 
     if (droppedOn === question.answer) {
-      playCorrect();
+      speak("Great job!");
       celebrate(); // star-burst on a correct drop
       addCorrect();
       const next = solved + 1;
       setSolved(next);
       if (next >= QUESTIONS_PER_QUIZ) onFinish?.();
     } else {
-      playWrong();
+      speak("Try again!");
       addWrong();
       // Spring the chip back to its starting spot for another try.
       setResetNonce((n) => n + 1);
