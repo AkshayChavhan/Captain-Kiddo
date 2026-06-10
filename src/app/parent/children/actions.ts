@@ -3,14 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getActiveParentId } from "@/lib/activeParent";
-import { isParentAreaUnlocked } from "@/lib/parentSession";
 
 /**
  * Server Actions for managing child profiles.
  *
- * Every action re-checks BOTH that the parent area is unlocked (PIN entered) AND
- * that we have an active parent — the gate isn't just UI, it's enforced here on
- * the server so a kid (or a crafted request) can't add/remove profiles.
+ * Every action re-checks that there's a logged-in parent — the gate isn't just
+ * UI, it's enforced here on the server so a crafted request can't add/remove
+ * profiles.
  *
  * Children always belong to the active parent; we never accept a parentId from
  * the client.
@@ -21,15 +20,12 @@ export interface ActionResult {
   error?: string;
 }
 
-/** Guard: must be unlocked AND have an active parent. Returns the parentId. */
+/** Guard: must have a logged-in parent. Returns the parentId. */
 async function requireParent(): Promise<
   { ok: true; parentId: string } | { ok: false; error: string }
 > {
-  if (!isParentAreaUnlocked()) {
-    return { ok: false, error: "Parent area is locked." };
-  }
   const parentId = await getActiveParentId();
-  if (!parentId) return { ok: false, error: "No parent account found." };
+  if (!parentId) return { ok: false, error: "Please log in." };
   return { ok: true, parentId };
 }
 

@@ -3,6 +3,7 @@ import { MODULES } from "@/config/modules";
 import { getActiveParentId } from "@/lib/activeParent";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { SlideToParent } from "@/components/parent/SlideToParent";
+import { AnimatedBackground } from "@/components/shared/AnimatedBackground";
 
 /**
  * Home page (route "/") — the module grid.
@@ -15,25 +16,33 @@ export default async function HomePage() {
   const loggedIn = Boolean(await getActiveParentId());
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-8 p-6">
+    <main className="relative flex min-h-screen flex-col items-center gap-8 p-6">
+      {/* Playful moving cartoon backdrop (original characters, sits behind all
+          content and never blocks taps).
+          See [AnimatedBackground](../components/shared/AnimatedBackground.tsx). */}
+      <AnimatedBackground />
+
       <header className="flex flex-col items-center gap-2 pt-6 text-center">
         <div className="text-7xl">🦸</div>
         <h1 className="font-kiddo text-4xl font-bold">Captain Kiddo</h1>
         <p className="text-lg text-gray-600">What shall we learn today?</p>
 
-        {/* Auth status */}
+        {/* Auth status. Only a logged-in parent gets the slide-to-parent gate —
+            for a guest, sliding would just bounce to /login, so we show the
+            log-in prompt instead. The slide is the EXTRA kid-lock on top of being
+            logged in (a toddler poking the screen can't open it; only a
+            deliberate left-to-right slide does).
+            See [SlideToParent](../components/parent/SlideToParent.tsx). */}
         {loggedIn ? (
-          <LogoutButton />
+          <>
+            <LogoutButton />
+            <SlideToParent />
+          </>
         ) : (
           <Link href="/login" className="kiddo-btn bg-kiddo-blue px-5 py-2 text-lg">
             Log in to play all games
           </Link>
         )}
-
-        {/* Kid-resistant gate into the grown-up area. A toddler poking the
-            screen can't open it — only a deliberate left-to-right slide does.
-            See [SlideToParent](../components/parent/SlideToParent.tsx). */}
-        <SlideToParent />
       </header>
 
       <section className="grid w-full max-w-md grid-cols-2 gap-5">

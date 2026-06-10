@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { isParentAreaUnlocked } from "@/lib/parentSession";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
 import { getChildProgressSummary } from "@/lib/progressSummary";
@@ -7,7 +6,6 @@ import { getChildWeakAreas } from "@/lib/weakAreas";
 import { getTodayLevelsCompleted } from "@/lib/dailyGoal";
 import { BUNDLE_SLUG } from "@/config/modules";
 import { DEFAULT_AVATAR } from "@/config/avatars";
-import { PinPad } from "@/components/parent/PinPad";
 import { UnlockModules } from "@/components/parent/UnlockModules";
 import { RewardShop } from "@/components/parent/RewardShop";
 import {
@@ -16,34 +14,25 @@ import {
 } from "@/components/parent/ChildProfiles";
 import { ChildProgress } from "@/components/parent/ChildProgress";
 import { DailyGoal } from "@/components/parent/DailyGoal";
+import { DashboardSection } from "@/components/parent/DashboardSection";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { HomeButton } from "@/components/shared/HomeButton";
 
 /**
  * Parent area entry — /parent
  *
- * If the area is locked, show the PIN pad. Once unlocked (correct PIN this
- * session), show the dashboard: child profiles now, with progress/goals/payments
- * added in the following Phase D tickets.
+ * The kid-resistance is the deliberate SLIDE gesture on the home screen
+ * (SlideToParent) — a toddler poking the screen can't open it. Once a parent
+ * slides in, they get the dashboard directly (no PIN). The only requirement is
+ * being logged in (login = the Parent account); guests are sent to /login.
  *
- * Server component so the lock check + data fetch happen on the server — a kid
- * can't bypass the gate by tampering with client state.
+ * Server component so the login check + data fetch happen on the server.
  */
 export default async function ParentPage() {
-  // The parent area requires a logged-in account first (login = the Parent).
-  // The PIN gate below is an extra kid-lock on top of being logged in.
-  if (!(await getActiveParentId())) {
+  const parentId = await getActiveParentId();
+  if (!parentId) {
     redirect("/login?next=/parent");
   }
-
-  if (!isParentAreaUnlocked()) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-6">
-        <PinPad />
-      </main>
-    );
-  }
-
-  // Unlocked: load this parent's children.
-  const parentId = await getActiveParentId();
   const children: ChildSummary[] = parentId
     ? await prisma.child.findMany({
         where: { parentId },
@@ -102,18 +91,27 @@ export default async function ParentPage() {
   }));
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-6 p-6">
-      <header className="pt-6 text-center">
-        <h1 className="font-kiddo text-3xl font-bold">Parent Dashboard</h1>
-        <p className="text-gray-600">Welcome back! 👋</p>
+    <main className="relative flex min-h-screen flex-col items-center gap-6 bg-gradient-to-b from-kiddo-yellow/40 via-kiddo-pink/20 to-kiddo-teal/30 p-6">
+      {/* Home — icon only, pinned top-left. */}
+      <HomeButton />
+
+      {/* Log out — a power/turn-off icon, pinned top-right. Tapping it asks
+          "Do you really want to get out?" before it actually signs out. */}
+      <LogoutButton className="kiddo-btn absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center bg-kiddo-red p-0 text-2xl disabled:opacity-50" />
+
+      <header className="flex flex-col items-center gap-1 pt-4 text-center">
+        <div className="text-6xl">🧑‍🍼</div>
+        <h1 className="font-kiddo text-4xl font-bold text-kiddo-purple">
+          Parent Dashboard
+        </h1>
+        <p className="text-lg font-bold text-gray-600">Welcome back! 👋</p>
       </header>
 
       <ChildProfiles kids={children} />
 
       {/* Per-child progress */}
       {progress.length > 0 && (
-        <section className="flex w-full max-w-md flex-col gap-4">
-          <h2 className="font-kiddo text-2xl font-bold">Progress</h2>
+        <DashboardSection emoji="📊" title="Progress" accent="bg-kiddo-purple">
           {progress.map(({ child, summary, weakAreas, completedToday }) => (
             <div key={child.id} className="flex flex-col gap-2">
               <ChildProgress
@@ -129,7 +127,7 @@ export default async function ParentPage() {
               />
             </div>
           ))}
-        </section>
+        </DashboardSection>
       )}
 
       {/* Buy / unlock modules (Razorpay checkout) */}
