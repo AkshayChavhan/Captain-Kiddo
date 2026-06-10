@@ -67,3 +67,49 @@ export function isPointOnPath(
 ): boolean {
   return distanceToStrokes(p, strokes) <= tolerance;
 }
+
+/** Smallest distance from a point to any point in a set (or Infinity if empty). */
+function nearestDistance(p: Point, others: Point[]): number {
+  let min = Infinity;
+  for (const o of others) {
+    const d = Math.hypot(p.x - o.x, p.y - o.y);
+    if (d < min) min = d;
+  }
+  return min;
+}
+
+/**
+ * What fraction of the GUIDE has the child actually traced over?
+ *
+ * Prevents "cheating" by scribbling on one corner: we sample points ALONG each
+ * guide stroke and check how many have a drawn point nearby. Returns 0..1.
+ *
+ * @param drawn      the child's drawn points
+ * @param strokes    the letter's guide strokes (pixels)
+ * @param tolerance  how close a drawn point must be to "cover" a guide point
+ */
+export function traceCoverage(
+  drawn: Point[],
+  strokes: Point[][],
+  tolerance = 40
+): number {
+  // Sample points evenly along every guide segment.
+  const samples: Point[] = [];
+  for (const stroke of strokes) {
+    for (let i = 1; i < stroke.length; i++) {
+      const a = stroke[i - 1];
+      const b = stroke[i];
+      const steps = 6; // points per segment
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        samples.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+      }
+    }
+  }
+  if (samples.length === 0) return 0;
+
+  const covered = samples.filter(
+    (s) => nearestDistance(s, drawn) <= tolerance
+  ).length;
+  return covered / samples.length;
+}
