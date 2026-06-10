@@ -1,27 +1,40 @@
 import { isParentAreaUnlocked } from "@/lib/parentSession";
+import { getActiveParentId } from "@/lib/activeParent";
+import { prisma } from "@/lib/prisma";
 import { PinPad } from "@/components/parent/PinPad";
+import {
+  ChildProfiles,
+  type ChildSummary,
+} from "@/components/parent/ChildProfiles";
 
 /**
  * Parent area entry — /parent
  *
  * If the area is locked, show the PIN pad. Once unlocked (correct PIN this
- * session), show the dashboard. The actual dashboard contents (child profiles,
- * progress, payments) are built in the following Phase D tickets; this ticket is
- * the PIN GATE that protects all of it.
+ * session), show the dashboard: child profiles now, with progress/goals/payments
+ * added in the following Phase D tickets.
  *
- * Server component so the lock check happens on the server — a kid can't bypass
- * it by tampering with client state.
+ * Server component so the lock check + data fetch happen on the server — a kid
+ * can't bypass the gate by tampering with client state.
  */
-export default function ParentPage() {
-  const unlocked = isParentAreaUnlocked();
-
-  if (!unlocked) {
+export default async function ParentPage() {
+  if (!isParentAreaUnlocked()) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-6">
         <PinPad />
       </main>
     );
   }
+
+  // Unlocked: load this parent's children.
+  const parentId = await getActiveParentId();
+  const children: ChildSummary[] = parentId
+    ? await prisma.child.findMany({
+        where: { parentId },
+        select: { id: true, name: true, age: true, avatar: true, totalStars: true },
+        orderBy: { createdAt: "asc" },
+      })
+    : [];
 
   return (
     <main className="flex min-h-screen flex-col items-center gap-6 p-6">
@@ -30,9 +43,10 @@ export default function ParentPage() {
         <p className="text-gray-600">Welcome back! 👋</p>
       </header>
 
-      {/* Child profiles, progress, goals, and payments come in the next Phase D
-          tickets (parent02–parent05, pay01–pay03, shop01). */}
-      <p className="text-gray-500">Dashboard coming together…</p>
+      <ChildProfiles kids={children} />
+
+      {/* Per-child progress, weak areas, daily goals, payments, and the reward
+          shop come in parent03–parent05, pay01–pay03, shop01. */}
     </main>
   );
 }
