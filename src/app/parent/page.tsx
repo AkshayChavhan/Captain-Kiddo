@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
@@ -17,6 +16,7 @@ import { ChildProgress } from "@/components/parent/ChildProgress";
 import { DailyGoal } from "@/components/parent/DailyGoal";
 import { DashboardSection } from "@/components/parent/DashboardSection";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { HomeButton } from "@/components/shared/HomeButton";
 
 /**
  * Parent area entry — /parent
@@ -93,19 +93,11 @@ export default async function ParentPage() {
   return (
     <main className="relative flex min-h-screen flex-col items-center gap-6 bg-gradient-to-b from-kiddo-yellow/40 via-kiddo-pink/20 to-kiddo-teal/30 p-6">
       {/* Home — icon only, pinned top-left. */}
-      <Link
-        href="/"
-        aria-label="Go to home screen"
-        className="kiddo-btn absolute left-4 top-4 z-10 flex h-12 w-12 items-center justify-center bg-kiddo-green p-0 text-2xl"
-      >
-        🏠
-      </Link>
+      <HomeButton />
 
-      {/* Log out — pinned top-right. */}
-      <LogoutButton
-        label="🚪 Log out"
-        className="kiddo-btn absolute right-4 top-4 z-10 bg-kiddo-red px-5 py-2 text-lg disabled:opacity-50"
-      />
+      {/* Log out — a power/turn-off icon, pinned top-right. Tapping it asks
+          "Do you really want to get out?" before it actually signs out. */}
+      <LogoutButton className="kiddo-btn absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center bg-kiddo-red p-0 text-2xl disabled:opacity-50" />
 
       <header className="flex flex-col items-center gap-1 pt-4 text-center">
         <div className="text-6xl">🧑‍🍼</div>
