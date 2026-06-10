@@ -16,7 +16,12 @@ export default async function HomePage() {
   const loggedIn = Boolean(await getActiveParentId());
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-8 p-6">
+    <main className="relative flex min-h-screen flex-col items-center gap-8 p-6">
+      {/* Playful moving cartoon backdrop (original characters, sits behind all
+          content and never blocks taps).
+          See [AnimatedBackground](../components/shared/AnimatedBackground.tsx). */}
+      <AnimatedBackground />
+
       <header className="flex flex-col items-center gap-2 pt-6 text-center">
         <div className="text-7xl">🦸</div>
         <h1 className="font-kiddo text-4xl font-bold">Captain Kiddo</h1>
