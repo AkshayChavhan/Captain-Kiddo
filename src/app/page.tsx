@@ -21,19 +21,22 @@ export default async function HomePage() {
         <h1 className="font-kiddo text-4xl font-bold">Captain Kiddo</h1>
         <p className="text-lg text-gray-600">What shall we learn today?</p>
 
-        {/* Auth status */}
+        {/* Auth status. Only a logged-in parent gets the slide-to-parent gate —
+            for a guest, sliding would just bounce to /login, so we show the
+            log-in prompt instead. The slide is the EXTRA kid-lock on top of being
+            logged in (a toddler poking the screen can't open it; only a
+            deliberate left-to-right slide does).
+            See [SlideToParent](../components/parent/SlideToParent.tsx). */}
         {loggedIn ? (
-          <LogoutButton />
+          <>
+            <LogoutButton />
+            <SlideToParent />
+          </>
         ) : (
           <Link href="/login" className="kiddo-btn bg-kiddo-blue px-5 py-2 text-lg">
             Log in to play all games
           </Link>
         )}
-
-        {/* Kid-resistant gate into the grown-up area. A toddler poking the
-            screen can't open it — only a deliberate left-to-right slide does.
-            See [SlideToParent](../components/parent/SlideToParent.tsx). */}
-        <SlideToParent />
       </header>
 
       <section className="grid w-full max-w-md grid-cols-2 gap-5">
