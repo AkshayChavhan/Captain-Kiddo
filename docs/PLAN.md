@@ -15,11 +15,11 @@
 | Phase | Area | Done / Total |
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
-| B | Numbers Learning Module | 6 / 9 |
+| B | Numbers Learning Module | 7 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **18 / 43** |
+| — | **TOTAL** | **19 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -54,7 +54,7 @@
 | B4 | ✅ | `numbers03-howler-audio-taps` | Tap-to-play audio with Howler |
 | B5 | ✅ | `numbers04-framer-animations` | Bounce/scale Framer Motion animations |
 | B6 | ✅ | `numbers05-quiz-tap-answer` | Quiz: tap-the-correct-answer + star rewards |
-| B7 | ⬜ | `numbers06-quiz-drag-drop` | Quiz: drag-and-drop numeral↔quantity matching |
+| B7 | ✅ | `numbers06-quiz-drag-drop` | Quiz: drag-and-drop numeral↔quantity matching |
 | B8 | ⬜ | `numbers07-celebration-confetti` | Confetti / star-burst celebration + audio feedback |
 | B9 | ⬜ | `numbers08-save-progress-api` | Save Progress (upsert), unlock next tier, award stars + API routes |
 
