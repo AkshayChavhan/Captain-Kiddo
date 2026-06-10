@@ -12,14 +12,20 @@
  *  - `count`: how many emoji to show (numbers count out; colors/letters show 1)
  *  - `audio`: spoken clip path (audio-first)
  */
-import { numberAudio, letterAudio, nameAudio } from "@/config/audio";
-
 export interface ContentItem {
   label: string;
   emoji: string;
   count: number;
-  audio: string;
+  /** The text spoken aloud (via browser TTS) when this item appears / is tapped. */
+  speak: string;
 }
+
+/** Digit -> spoken word, so "3" reads as "three" (0–20 covers all tiers). */
+const NUMBER_WORDS = [
+  "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+  "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+];
 
 /** Build the items for a tier of a module. Numbers use the tier's numeric range. */
 export function getModuleItems(
@@ -36,7 +42,7 @@ export function getModuleItems(
           label: String(n),
           emoji: "🍎",
           count: n, // count out n apples
-          audio: numberAudio(n),
+          speak: NUMBER_WORDS[n] ?? String(n), // "three", not "3"
         });
       }
       return items;
@@ -47,7 +53,7 @@ export function getModuleItems(
         label: c.label,
         emoji: c.emoji,
         count: 1,
-        audio: nameAudio("colors", c.key),
+        speak: c.key, // "yellow"
       }));
 
     case "alphabets":
@@ -55,17 +61,17 @@ export function getModuleItems(
         label: a.letter,
         emoji: a.emoji,
         count: 1,
-        audio: letterAudio(a.letter),
+        speak: a.letter, // "A"
       }));
 
     case "animals":
-      return wordItems("animals", ANIMALS);
+      return wordItems(ANIMALS);
 
     case "shapes":
-      return wordItems("shapes", SHAPES);
+      return wordItems(SHAPES);
 
     case "fruits":
-      return wordItems("fruits", FRUITS);
+      return wordItems(FRUITS);
 
     default:
       // Modules without bespoke content yet -> empty (LearningView shows a notice).
@@ -73,20 +79,20 @@ export function getModuleItems(
   }
 }
 
-/** A word-based item: a name + an emoji. `key` drives the audio file name. */
+/** A word-based item: a name + an emoji. `key` is the spoken word. */
 export interface WordEntry {
   key: string;
   label: string;
   emoji: string;
 }
 
-/** Map word entries to ContentItems that speak their NAME on tap. */
-function wordItems(module: string, entries: WordEntry[]): ContentItem[] {
+/** Map word entries to ContentItems that SPEAK their key on tap (e.g. "lion"). */
+function wordItems(entries: WordEntry[]): ContentItem[] {
   return entries.map((e) => ({
     label: e.label,
     emoji: e.emoji,
     count: 1,
-    audio: nameAudio(module, e.key),
+    speak: e.key,
   }));
 }
 

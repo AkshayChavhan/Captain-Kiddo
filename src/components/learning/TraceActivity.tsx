@@ -3,8 +3,11 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { Difficulty } from "@prisma/client";
-import { TraceLetter } from "@/components/learning/TraceLetter";
-import { TRACEABLE_LETTERS } from "@/config/letterPaths";
+import { TraceGlyph } from "@/components/learning/TraceGlyph";
+import {
+  TRACEABLE_LETTERS,
+  getLetterStrokes,
+} from "@/config/letterPaths";
 
 /**
  * TraceActivity — sequences letters one at a time into a full tracing session.
@@ -82,8 +85,14 @@ export function TraceActivity({
         </span>
       </header>
 
-      {/* `key` remounts TraceLetter on each new letter so its audio + state reset. */}
-      <TraceLetter key={current} letter={current} onComplete={handleComplete} />
+      {/* `key` remounts on each new letter so its speech + state reset. */}
+      <TraceGlyph
+        key={current}
+        strokes={getLetterStrokes(current) ?? []}
+        speakText={current}
+        promptLabel={`Trace the ${current}!`}
+        onComplete={handleComplete}
+      />
     </main>
   );
 }

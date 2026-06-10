@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useSound } from "@/hooks/useSound";
-import { FEEDBACK_AUDIO } from "@/config/audio";
+import { speak } from "@/lib/speak";
+import { useSpeak } from "@/hooks/useSpeak";
 import { useQuizStore } from "@/store/quizStore";
 import { Celebration } from "@/components/shared/Celebration";
 import { useCelebration } from "@/hooks/useCelebration";
@@ -34,8 +34,6 @@ export function ItemQuiz({
   const addWrong = useQuizStore((s) => s.addWrong);
   const stars = useQuizStore((s) => s.stars);
 
-  const playCorrect = useSound(FEEDBACK_AUDIO.correct);
-  const playWrong = useSound(FEEDBACK_AUDIO.wrong);
   const { celebrating, celebrate } = useCelebration();
 
   const [solved, setSolved] = useState(0);
@@ -60,25 +58,23 @@ export function ItemQuiz({
     // Rebuild each time we advance a question.
   }, [items, solved]);
 
-  // Speak the prompt item when the question changes (autoplay on load); the
-  // child can tap the prompt to hear it again.
-  const playPrompt = useSound(question?.answer.audio ?? null, {
-    autoplay: true,
-  });
+  // Speak the prompt item when the question changes (TTS, on appear); the child
+  // can tap the prompt to hear it again.
+  const sayPrompt = useSpeak(question?.answer.speak ?? "", { onAppear: true });
 
   if (!question) return null;
 
   const pick = (label: string) => {
     if (label === question.answer.label) {
-      playCorrect();
       celebrate();
+      speak("Great job!");
       addCorrect();
       const next = solved + 1;
       setSolved(next);
       setWrongPick(null);
       if (next >= QUESTIONS_PER_QUIZ) onFinish?.();
     } else {
-      playWrong();
+      speak("Try again!");
       addWrong();
       setWrongPick(label);
       globalThis.setTimeout(() => setWrongPick(null), 600);
@@ -99,7 +95,7 @@ export function ItemQuiz({
       {/* The prompt: the item's visual (tap to hear again) */}
       <button
         type="button"
-        onClick={() => playPrompt()}
+        onClick={() => sayPrompt()}
         className="kiddo-card flex min-h-tap w-full items-center justify-center bg-white text-7xl"
         aria-label="Hear again"
       >

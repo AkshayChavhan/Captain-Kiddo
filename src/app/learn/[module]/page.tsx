@@ -45,8 +45,19 @@ export default async function ModuleHomePage({
       className="flex min-h-screen flex-col items-center gap-8 p-6"
       style={{ backgroundColor: `${module.color}22` }} // tint bg with module color
     >
+      {/* Top bar: a big, always-visible way back to the home screen. */}
+      <div className="flex w-full max-w-md items-center">
+        <Link
+          href="/"
+          aria-label="Go to home screen"
+          className="kiddo-btn bg-kiddo-green px-5 py-2 text-lg"
+        >
+          🏠 Home
+        </Link>
+      </div>
+
       {/* Module title */}
-      <header className="flex flex-col items-center gap-2 pt-4 text-center">
+      <header className="flex flex-col items-center gap-2 text-center">
         <div className="text-7xl">{module.emoji}</div>
         <h1 className="font-kiddo text-4xl font-bold">{module.title}</h1>
         <p className="text-lg text-gray-600">Pick a level to start!</p>
