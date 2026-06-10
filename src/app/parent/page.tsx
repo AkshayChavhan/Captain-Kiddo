@@ -1,11 +1,14 @@
 import { isParentAreaUnlocked } from "@/lib/parentSession";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
+import { getChildProgressSummary } from "@/lib/progressSummary";
+import { DEFAULT_AVATAR } from "@/config/avatars";
 import { PinPad } from "@/components/parent/PinPad";
 import {
   ChildProfiles,
   type ChildSummary,
 } from "@/components/parent/ChildProfiles";
+import { ChildProgress } from "@/components/parent/ChildProgress";
 
 /**
  * Parent area entry — /parent
@@ -36,6 +39,14 @@ export default async function ParentPage() {
       })
     : [];
 
+  // Per-child progress summaries (fetched in parallel).
+  const progress = await Promise.all(
+    children.map(async (c) => ({
+      child: c,
+      summary: await getChildProgressSummary(c.id),
+    }))
+  );
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-6 p-6">
       <header className="pt-6 text-center">
@@ -45,8 +56,23 @@ export default async function ParentPage() {
 
       <ChildProfiles kids={children} />
 
-      {/* Per-child progress, weak areas, daily goals, payments, and the reward
-          shop come in parent03–parent05, pay01–pay03, shop01. */}
+      {/* Per-child progress */}
+      {progress.length > 0 && (
+        <section className="flex w-full max-w-md flex-col gap-4">
+          <h2 className="font-kiddo text-2xl font-bold">Progress</h2>
+          {progress.map(({ child, summary }) => (
+            <ChildProgress
+              key={child.id}
+              name={child.name}
+              avatar={child.avatar ?? DEFAULT_AVATAR}
+              summary={summary}
+            />
+          ))}
+        </section>
+      )}
+
+      {/* Weak areas, daily goals, payments, and the reward shop come in
+          parent04–parent05, pay01–pay03, shop01. */}
     </main>
   );
 }
