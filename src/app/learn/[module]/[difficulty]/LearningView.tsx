@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence } from "framer-motion";
 import { NumberCard } from "@/components/learning/NumberCard";
 import type { TierConfig } from "@/config/tiers";
 
@@ -46,9 +47,13 @@ export function LearningView({
         </span>
       </header>
 
-      {/* The number card */}
+      {/* The number card. Keying by `current` makes React swap the card when the
+          number changes, which replays the bounce/stagger enter animation.
+          AnimatePresence lets the outgoing number animate out first. */}
       <div className="flex flex-1 items-center justify-center">
-        <NumberCard value={current} />
+        <AnimatePresence mode="wait">
+          <NumberCard key={current} value={current} />
+        </AnimatePresence>
       </div>
 
       {/* Bottom bar: Back / Next big buttons */}
