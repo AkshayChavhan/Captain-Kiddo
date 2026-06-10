@@ -16,10 +16,10 @@
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
-| C | Media Playback | 0 / 7 |
+| C | Media Playback | 1 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **21 / 43** |
+| — | **TOTAL** | **22 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -64,7 +64,7 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| C1 | ⬜ | `media01-shared-audio-player` | Shared Howler-based `AudioPlayer` component |
+| C1 | ✅ | `media01-shared-audio-player` | Shared Howler-based `AudioPlayer` component |
 | C2 | ⬜ | `media02-content-gating` | Respect `isFree`/`priceInPaise` gating from `MediaContent` |
 | C3 | ⬜ | `media03-singalong-player` | Sing-along player base (load song + lyrics) |
 | C4 | ⬜ | `media04-lyric-sync-highlight` | Karaoke lyric sync (rAF + startSec/endSec) + bouncing ball |
