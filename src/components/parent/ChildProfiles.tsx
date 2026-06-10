@@ -12,6 +12,7 @@ export interface ChildSummary {
   age: number;
   avatar: string | null;
   totalStars: number;
+  dailyGoal: number;
 }
 
 /**

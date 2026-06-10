@@ -60,6 +60,10 @@ model Child {
   // Stars earned across modules; spent in the reward shop. Integer count.
   totalStars Int      @default(0)
 
+  // Daily learning goal a parent sets: number of LEVELS (tier completions) the
+  // child should aim to finish each day. Integer count; 0 means no goal set.
+  dailyGoal  Int      @default(0)
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 

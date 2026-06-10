@@ -15,6 +15,11 @@ export function numberAudio(value: number): string {
   return `/audio/numbers/${value}.mp3`;
 }
 
+/** Spoken letter, e.g. letterAudio("A") -> "/audio/letters/a.mp3". */
+export function letterAudio(letter: string): string {
+  return `/audio/letters/${letter.toLowerCase()}.mp3`;
+}
+
 /** Encouraging feedback clips (used by quizzes/celebrations later). */
 export const FEEDBACK_AUDIO = {
   correct: "/audio/feedback/great-job.mp3",

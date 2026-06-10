@@ -17,9 +17,9 @@
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
 | C | Media Playback | 7 / 7 ✅ |
-| D | Parent Dashboard & Payments | 3 / 9 |
-| E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **31 / 43** |
+| D | Parent Dashboard & Payments | 9 / 9 ✅ |
+| E | Alphabet Tracing (learn to write) | 6 / 6 ✅ |
+| — | **TOTAL** | **43 / 43** 🎉 |
 
 > Update these counts as tickets are completed.
 
@@ -81,12 +81,12 @@
 | D1 | ✅ | `parent01-pin-protection` | Parent PIN gate (kids can't pass) |
 | D2 | ✅ | `parent02-child-profiles` | Manage multiple child profiles (name, age, avatar) |
 | D3 | ✅ | `parent03-progress-dashboard` | Per-child progress: modules, tiers, stars |
-| D4 | ⬜ | `parent04-weak-areas` | Derive "weak areas" from TestResult attempts vs score |
-| D5 | ⬜ | `parent05-daily-goals` | Set daily learning goals |
-| D6 | ⬜ | `pay01-create-order-api` | Create-order API → PENDING Payment (500 paise) |
-| D7 | ⬜ | `pay02-razorpay-checkout` | Razorpay checkout on client |
-| D8 | ⬜ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |
-| D9 | ⬜ | `shop01-reward-shop` | Reward shop: spend stars to unlock cosmetics |
+| D4 | ✅ | `parent04-weak-areas` | Derive "weak areas" from TestResult attempts vs score |
+| D5 | ✅ | `parent05-daily-goals` | Set daily learning goals |
+| D6 | ✅ | `pay01-create-order-api` | Create-order API → PENDING Payment (500 paise) |
+| D7 | ✅ | `pay02-razorpay-checkout` | Razorpay checkout on client |
+| D8 | ✅ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |
+| D9 | ✅ | `shop01-reward-shop` | Reward shop: spend stars to unlock cosmetics |
 
 ---
 
@@ -98,12 +98,12 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| E1 | ⬜ | `trace01-trace-canvas` | A reusable canvas that captures finger/pointer drag paths (touch + mouse) |
-| E2 | ⬜ | `trace02-letter-guide-paths` | Letter outline guide data (stroke paths per letter, A–Z) |
-| E3 | ⬜ | `trace03-on-path-detection` | Detect if the finger stays ON the letter path vs goes off |
-| E4 | ⬜ | `trace04-red-blink-feedback` | Blink the screen red **3 times** on a mistake, then reset for retry |
-| E5 | ⬜ | `trace05-success-and-audio` | Success celebration + audio-first letter sound & voice guidance |
-| E6 | ⬜ | `trace06-letter-flow-progress` | One-letter-at-a-time flow + save tracing progress to `Progress` |
+| E1 | ✅ | `trace01-trace-canvas` | A reusable canvas that captures finger/pointer drag paths (touch + mouse) |
+| E2 | ✅ | `trace02-letter-guide-paths` | Letter outline guide data (stroke paths per letter, A–Z) |
+| E3 | ✅ | `trace03-on-path-detection` | Detect if the finger stays ON the letter path vs goes off |
+| E4 | ✅ | `trace04-red-blink-feedback` | Blink the screen red **3 times** on a mistake, then reset for retry |
+| E5 | ✅ | `trace05-success-and-audio` | Success celebration + audio-first letter sound & voice guidance |
+| E6 | ✅ | `trace06-letter-flow-progress` | One-letter-at-a-time flow + save tracing progress to `Progress` |
 
 ---
 
