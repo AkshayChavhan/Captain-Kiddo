@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MODULES } from "@/config/modules";
 import { getActiveParentId } from "@/lib/activeParent";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { SlideToParent } from "@/components/parent/SlideToParent";
 
 /**
  * Home page (route "/") — the module grid.
@@ -28,6 +29,11 @@ export default async function HomePage() {
             Log in to play all games
           </Link>
         )}
+
+        {/* Kid-resistant gate into the grown-up area. A toddler poking the
+            screen can't open it — only a deliberate left-to-right slide does.
+            See [SlideToParent](../components/parent/SlideToParent.tsx). */}
+        <SlideToParent />
       </header>
 
       <section className="grid w-full max-w-md grid-cols-2 gap-5">
