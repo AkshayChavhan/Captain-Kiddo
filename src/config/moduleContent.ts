@@ -12,7 +12,7 @@
  *  - `count`: how many emoji to show (numbers count out; colors/letters show 1)
  *  - `audio`: spoken clip path (audio-first)
  */
-import { numberAudio, letterAudio } from "@/config/audio";
+import { numberAudio, letterAudio, nameAudio } from "@/config/audio";
 
 export interface ContentItem {
   label: string;
@@ -47,7 +47,7 @@ export function getModuleItems(
         label: c.label,
         emoji: c.emoji,
         count: 1,
-        audio: `/audio/colors/${c.key}.mp3`,
+        audio: nameAudio("colors", c.key),
       }));
 
     case "alphabets":
@@ -58,10 +58,36 @@ export function getModuleItems(
         audio: letterAudio(a.letter),
       }));
 
+    case "animals":
+      return wordItems("animals", ANIMALS);
+
+    case "shapes":
+      return wordItems("shapes", SHAPES);
+
+    case "fruits":
+      return wordItems("fruits", FRUITS);
+
     default:
       // Modules without bespoke content yet -> empty (LearningView shows a notice).
       return [];
   }
+}
+
+/** A word-based item: a name + an emoji. `key` drives the audio file name. */
+export interface WordEntry {
+  key: string;
+  label: string;
+  emoji: string;
+}
+
+/** Map word entries to ContentItems that speak their NAME on tap. */
+function wordItems(module: string, entries: WordEntry[]): ContentItem[] {
+  return entries.map((e) => ({
+    label: e.label,
+    emoji: e.emoji,
+    count: 1,
+    audio: nameAudio(module, e.key),
+  }));
 }
 
 /** Colors taught in the Colors module. `key` is used for audio paths. */
@@ -82,4 +108,36 @@ export const ALPHABET = [
   { letter: "D", emoji: "🐶" }, // Dog
   { letter: "E", emoji: "🐘" }, // Elephant
   { letter: "F", emoji: "🐟" }, // Fish
+];
+
+/** Animals — tapping one speaks its name. */
+export const ANIMALS: WordEntry[] = [
+  { key: "lion", label: "Lion", emoji: "🦁" },
+  { key: "dog", label: "Dog", emoji: "🐶" },
+  { key: "cat", label: "Cat", emoji: "🐱" },
+  { key: "elephant", label: "Elephant", emoji: "🐘" },
+  { key: "monkey", label: "Monkey", emoji: "🐵" },
+  { key: "cow", label: "Cow", emoji: "🐮" },
+  { key: "frog", label: "Frog", emoji: "🐸" },
+  { key: "penguin", label: "Penguin", emoji: "🐧" },
+];
+
+/** Shapes — tapping one speaks its name. */
+export const SHAPES: WordEntry[] = [
+  { key: "circle", label: "Circle", emoji: "🔵" },
+  { key: "square", label: "Square", emoji: "🟦" },
+  { key: "triangle", label: "Triangle", emoji: "🔺" },
+  { key: "star", label: "Star", emoji: "⭐" },
+  { key: "heart", label: "Heart", emoji: "❤️" },
+  { key: "diamond", label: "Diamond", emoji: "🔶" },
+];
+
+/** Fruits — tapping one speaks its name. */
+export const FRUITS: WordEntry[] = [
+  { key: "apple", label: "Apple", emoji: "🍎" },
+  { key: "banana", label: "Banana", emoji: "🍌" },
+  { key: "grapes", label: "Grapes", emoji: "🍇" },
+  { key: "orange", label: "Orange", emoji: "🍊" },
+  { key: "strawberry", label: "Strawberry", emoji: "🍓" },
+  { key: "watermelon", label: "Watermelon", emoji: "🍉" },
 ];

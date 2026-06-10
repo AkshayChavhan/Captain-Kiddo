@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { TraceCanvas, type TracePoint } from "@/components/learning/TraceCanvas";
 import { GlyphGuide } from "@/components/learning/GlyphGuide";
 import { RedBlinkOverlay } from "@/components/learning/RedBlinkOverlay";
@@ -42,13 +42,10 @@ export function TraceGlyph({
   const { blinking, blink } = useRedBlink({ times: 3 });
   const { celebrating, celebrate } = useCelebration();
 
-  const playGlyph = useSound(audioSrc);
+  // Speak the glyph on appear (audio-first); tap the label to replay.
+  const playGlyph = useSound(audioSrc, { autoplay: true });
   const playGreat = useSound(FEEDBACK_AUDIO.correct);
   const playTryAgain = useSound(FEEDBACK_AUDIO.wrong);
-
-  useEffect(() => {
-    playGlyph();
-  }, [playGlyph]);
 
   const scaled = useMemo(() => scaleStrokes(strokes, SIZE), [strokes]);
 

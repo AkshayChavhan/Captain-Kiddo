@@ -118,6 +118,32 @@
 
 ---
 
+## ➕ Bonus — Real per-module content + audio (post-plan)
+
+> Fixed: every module showed the Numbers game; made learning + quizzes content-driven,
+> every item speaks its name (auto on appear + tap to replay).
+
+| # | Status | Commit / Doc name | What it does |
+|---|--------|-------------------|--------------|
+| M1 | ✅ | `modules01-real-colors-alphabets` | content-driven LearningView/quiz; real Colors + Alphabets |
+| M2 | ✅ | `modules02-tap-to-speak-all-modules` | Animals/Shapes/Fruits content; every item speaks its name |
+| M3 | ✅ | `modules03-autoplay-on-appear` | items auto-speak on appear (onload), tap replays |
+
+---
+
+## ➕ Bonus — Login / Auth (post-plan)
+
+> Real accounts: **log in to play all games; first item of each module's Easy tier is
+> free without login.** Login = the Parent account.
+
+| # | Status | Commit / Doc name | What it does |
+|---|--------|-------------------|--------------|
+| A-1 | ✅ | `auth01-session-foundation` | password hashing (shared w/ PIN) + signed session cookie; real getActiveParentId/getActiveChildId |
+| A-2 | ✅ | `auth02-login-signup-ui` | email+password sign-up / log-in UI + server actions; home shows login state |
+| A-3 | ✅ | `auth03-guest-gate` | guest plays first Easy item of each module; login walls on further items, quizzes, dashboard |
+
+---
+
 ## 📝 How we work (the learning loop)
 
 For **each ticket**, the loop is:

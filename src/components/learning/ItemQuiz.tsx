@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useSound } from "@/hooks/useSound";
 import { FEEDBACK_AUDIO } from "@/config/audio";
@@ -60,11 +60,11 @@ export function ItemQuiz({
     // Rebuild each time we advance a question.
   }, [items, solved]);
 
-  // Speak the prompt item when the question changes.
-  const playPrompt = useSound(question?.answer.audio ?? null);
-  useEffect(() => {
-    playPrompt();
-  }, [playPrompt]);
+  // Speak the prompt item when the question changes (autoplay on load); the
+  // child can tap the prompt to hear it again.
+  const playPrompt = useSound(question?.answer.audio ?? null, {
+    autoplay: true,
+  });
 
   if (!question) return null;
 

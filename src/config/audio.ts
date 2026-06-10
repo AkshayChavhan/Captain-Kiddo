@@ -20,6 +20,15 @@ export function letterAudio(letter: string): string {
   return `/audio/letters/${letter.toLowerCase()}.mp3`;
 }
 
+/**
+ * Spoken NAME clip for a word-based module item (animals, shapes, fruits, colors).
+ * e.g. nameAudio("animals", "lion") -> "/audio/animals/lion.mp3".
+ * `key` should be a stable, lowercase, file-safe id.
+ */
+export function nameAudio(module: string, key: string): string {
+  return `/audio/${module}/${key}.mp3`;
+}
+
 /** Encouraging feedback clips (used by quizzes/celebrations later). */
 export const FEEDBACK_AUDIO = {
   correct: "/audio/feedback/great-job.mp3",

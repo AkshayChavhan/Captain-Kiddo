@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { TraceCanvas, type TracePoint } from "@/components/learning/TraceCanvas";
 import { LetterGuide } from "@/components/learning/LetterGuide";
 import { RedBlinkOverlay } from "@/components/learning/RedBlinkOverlay";
@@ -38,14 +38,10 @@ export function TraceLetter({
   const { celebrating, celebrate } = useCelebration();
 
   // Audio-first: the letter's name, plus encouraging feedback clips.
-  const playLetter = useSound(letterAudio(letter));
+  // Speak the letter on appear (audio-first — kids can't read); tap to replay.
+  const playLetter = useSound(letterAudio(letter), { autoplay: true });
   const playGreat = useSound(FEEDBACK_AUDIO.correct);
   const playTryAgain = useSound(FEEDBACK_AUDIO.wrong);
-
-  // Speak the letter when it appears (audio-first — kids can't read).
-  useEffect(() => {
-    playLetter();
-  }, [playLetter]);
 
   // Scale this letter's normalized guide to canvas pixels once.
   const scaled = useMemo(() => {
