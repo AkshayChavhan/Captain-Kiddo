@@ -21,7 +21,8 @@
     "zustand": "^4.5.4",
     "framer-motion": "^11.3.19",
     "howler": "^2.2.4",
-    "razorpay": "^2.9.4"
+    "razorpay": "^2.9.4",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
