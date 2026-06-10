@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getModule } from "@/config/modules";
 import { TIERS } from "@/config/tiers";
 import { unlockedDifficulties } from "@/lib/access";
@@ -61,6 +62,17 @@ export default async function ModuleHomePage({
             locked={!unlockedSet.has(tier.difficulty)}
           />
         ))}
+
+        {/* Numbers also has a "learn to write" tracing activity. */}
+        {moduleSlug === "numbers" && (
+          <Link href="/learn/numbers/write" className="block">
+            <div className="kiddo-card flex min-h-tap flex-col items-center justify-center gap-2 bg-kiddo-pink text-center text-white">
+              <div className="text-5xl">✍️</div>
+              <div className="text-2xl font-bold">Write Numbers</div>
+              <div className="text-lg opacity-90">Trace 0–9 with your finger</div>
+            </div>
+          </Link>
+        )}
       </section>
     </main>
   );
