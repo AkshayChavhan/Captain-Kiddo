@@ -13,7 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
  */
 export function useCelebration(durationMs = 900) {
   const [celebrating, setCelebrating] = useState(false);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const celebrate = useCallback(() => {
     setCelebrating(true);
