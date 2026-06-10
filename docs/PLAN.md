@@ -17,9 +17,9 @@
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
 | C | Media Playback | 7 / 7 ✅ |
-| D | Parent Dashboard & Payments | 7 / 9 |
+| D | Parent Dashboard & Payments | 8 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **35 / 43** |
+| — | **TOTAL** | **36 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -85,7 +85,7 @@
 | D5 | ✅ | `parent05-daily-goals` | Set daily learning goals |
 | D6 | ✅ | `pay01-create-order-api` | Create-order API → PENDING Payment (500 paise) |
 | D7 | ✅ | `pay02-razorpay-checkout` | Razorpay checkout on client |
-| D8 | ⬜ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |
+| D8 | ✅ | `pay03-verify-and-grant-access` | Server-side HMAC verify → PAID → ModuleAccess (atomic) + ₹39 bundle |
 | D9 | ⬜ | `shop01-reward-shop` | Reward shop: spend stars to unlock cosmetics |
 
 ---
