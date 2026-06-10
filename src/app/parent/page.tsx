@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
@@ -15,6 +16,7 @@ import {
 import { ChildProgress } from "@/components/parent/ChildProgress";
 import { DailyGoal } from "@/components/parent/DailyGoal";
 import { DashboardSection } from "@/components/parent/DashboardSection";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 /**
  * Parent area entry — /parent
@@ -89,7 +91,22 @@ export default async function ParentPage() {
   }));
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-6 bg-gradient-to-b from-kiddo-yellow/40 via-kiddo-pink/20 to-kiddo-teal/30 p-6">
+    <main className="relative flex min-h-screen flex-col items-center gap-6 bg-gradient-to-b from-kiddo-yellow/40 via-kiddo-pink/20 to-kiddo-teal/30 p-6">
+      {/* Pinned top-right: log out + back to the home screen. */}
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+        <LogoutButton
+          label="🚪 Log out"
+          className="kiddo-btn bg-kiddo-red px-5 py-2 text-lg disabled:opacity-50"
+        />
+        <Link
+          href="/"
+          aria-label="Go to home screen"
+          className="kiddo-btn bg-kiddo-green px-5 py-2 text-lg"
+        >
+          🏠 Home
+        </Link>
+      </div>
+
       <header className="flex flex-col items-center gap-1 pt-4 text-center">
         <div className="text-6xl">🧑‍🍼</div>
         <h1 className="font-kiddo text-4xl font-bold text-kiddo-purple">
