@@ -16,9 +16,16 @@ import { Howl } from "howler";
  *   <button onClick={play}>Play</button>
  *
  * Pass `null` for src to get a no-op `play` (handy before audio files exist).
+ *
+ * Set `{ autoplay: true }` to speak as soon as the clip is LOADED — the robust
+ * way to "play on appear" (it waits for load, avoiding a play-before-ready race).
  */
-export function useSound(src: string | null) {
+export function useSound(
+  src: string | null,
+  opts?: { autoplay?: boolean }
+) {
   const howlRef = useRef<Howl | null>(null);
+  const autoplay = opts?.autoplay ?? false;
 
   useEffect(() => {
     // No src -> nothing to load.
@@ -33,6 +40,8 @@ export function useSound(src: string | null) {
       // better for many short clips and lower memory on phones.
       html5: true,
       preload: true,
+      // Speak on appear: play once the file is ready (no play-before-load race).
+      onload: autoplay ? () => howl.play() : undefined,
     });
     howlRef.current = howl;
 
@@ -41,7 +50,7 @@ export function useSound(src: string | null) {
       howl.unload();
       howlRef.current = null;
     };
-  }, [src]);
+  }, [src, autoplay]);
 
   // Stable play function. Stops any in-flight play first so rapid taps restart
   // the sound cleanly rather than overlapping.

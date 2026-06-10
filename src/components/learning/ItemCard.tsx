@@ -8,11 +8,15 @@ import type { ContentItem } from "@/config/moduleContent";
  * ItemCard — the generic learning card for ANY module.
  *
  * Generalized from NumberCard: shows an item's big label plus `count` copies of
- * its emoji (numbers count out N apples; colors/letters show one visual). Tapping
- * speaks the item (audio-first). Same bounce/stagger animations as NumberCard.
+ * its emoji (numbers count out N apples; colors/letters show one visual).
+ *
+ * AUDIO-FIRST: the item's name plays automatically when the card appears (kids
+ * can't read), and tapping the card replays it. `autoplay` waits for the clip to
+ * load before playing. LearningView keys the card by index, so each new item
+ * remounts -> speaks on arrival.
  */
 export function ItemCard({ item }: Readonly<{ item: ContentItem }>) {
-  const play = useSound(item.audio);
+  const play = useSound(item.audio, { autoplay: true });
   const emojiKeys = Array.from(
     { length: Math.max(1, item.count) },
     (_, i) => `e-${i}`
