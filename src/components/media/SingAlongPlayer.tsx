@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 import { AudioPlayer } from "@/components/media/AudioPlayer";
+import { Mascot } from "@/components/shared/Mascot";
 import { activeLyricIndex } from "@/lib/lyrics";
 import type { LyricLine, Song } from "@/types/media";
 
@@ -41,6 +42,9 @@ export function SingAlongPlayer({ song }: Readonly<{ song: Song }>) {
         )}
         <h1 className="font-kiddo text-3xl font-bold">{song.title}</h1>
       </header>
+
+      {/* Dancing mascot — bounces along while the song plays so kids copy it. */}
+      <Mascot dancing={player.playing} />
 
       {/* Lyrics — the active line lights up with a bouncing ball above it. */}
       <section className="flex w-full max-w-sm flex-1 flex-col items-center gap-3 overflow-y-auto py-2">

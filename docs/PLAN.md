@@ -16,10 +16,10 @@
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
-| C | Media Playback | 4 / 7 |
-| D | Parent Dashboard & Payments | 0 / 9 |
+| C | Media Playback | 7 / 7 ✅ |
+| D | Parent Dashboard & Payments | 3 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **25 / 43** |
+| — | **TOTAL** | **31 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -68,9 +68,9 @@
 | C2 | ✅ | `media02-content-gating` | Respect `isFree`/`priceInPaise` gating from `MediaContent` |
 | C3 | ✅ | `media03-singalong-player` | Sing-along player base (load song + lyrics) |
 | C4 | ✅ | `media04-lyric-sync-highlight` | Karaoke lyric sync (rAF + startSec/endSec) + bouncing ball |
-| C5 | ⬜ | `media05-singalong-mascot` | Dancing Captain Kiddo mascot |
-| C6 | ⬜ | `media06-lullaby-sleep-timer` | Lullaby calming player + sleep timer (fade → pause) |
-| C7 | ⬜ | `media07-sleep-stories-player` | Sleep-story narrated player + gentle scene animation |
+| C5 | ✅ | `media05-singalong-mascot` | Dancing Captain Kiddo mascot |
+| C6 | ✅ | `media06-lullaby-sleep-timer` | Lullaby calming player + sleep timer (fade → pause) |
+| C7 | ✅ | `media07-sleep-stories-player` | Sleep-story narrated player + gentle scene animation |
 
 ---
 
@@ -78,9 +78,9 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| D1 | ⬜ | `parent01-pin-protection` | Parent PIN gate (kids can't pass) |
-| D2 | ⬜ | `parent02-child-profiles` | Manage multiple child profiles (name, age, avatar) |
-| D3 | ⬜ | `parent03-progress-dashboard` | Per-child progress: modules, tiers, stars |
+| D1 | ✅ | `parent01-pin-protection` | Parent PIN gate (kids can't pass) |
+| D2 | ✅ | `parent02-child-profiles` | Manage multiple child profiles (name, age, avatar) |
+| D3 | ✅ | `parent03-progress-dashboard` | Per-child progress: modules, tiers, stars |
 | D4 | ⬜ | `parent04-weak-areas` | Derive "weak areas" from TestResult attempts vs score |
 | D5 | ⬜ | `parent05-daily-goals` | Set daily learning goals |
 | D6 | ⬜ | `pay01-create-order-api` | Create-order API → PENDING Payment (500 paise) |

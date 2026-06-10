@@ -27,6 +27,11 @@ export interface AudioPlayerApi {
   seek: (seconds: number) => void;
   /** Set volume 0..1. */
   setVolume: (v: number) => void;
+  /**
+   * Gently fade the volume to 0 over `durationMs`, then pause (and restore the
+   * volume so a later play starts at full). Used by the lullaby sleep timer.
+   */
+  fadeOutAndPause: (durationMs: number) => void;
 }
 
 export function useAudioPlayer(
@@ -112,5 +117,28 @@ export function useAudioPlayer(
     howlRef.current?.volume(Math.max(0, Math.min(1, v)));
   }, []);
 
-  return { playing, position, duration, play, pause, toggle, seek, setVolume };
+  const fadeOutAndPause = useCallback((durationMs: number) => {
+    const howl = howlRef.current;
+    if (!howl) return;
+    const current = howl.volume();
+    // Howler's fade(from, to, duration_ms) ramps the volume smoothly.
+    howl.fade(current, 0, durationMs);
+    // When the fade reaches 0, pause and restore the volume for next time.
+    howl.once("fade", () => {
+      howl.pause();
+      howl.volume(current);
+    });
+  }, []);
+
+  return {
+    playing,
+    position,
+    duration,
+    play,
+    pause,
+    toggle,
+    seek,
+    setVolume,
+    fadeOutAndPause,
+  };
 }

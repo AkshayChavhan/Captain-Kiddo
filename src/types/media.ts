@@ -21,3 +21,11 @@ export interface Song {
   coverImage?: string | null;
   lyrics: LyricLine[];
 }
+
+/** A generic media item (lullaby / sleep story) — no lyrics needed. */
+export interface MediaItem {
+  id: string;
+  title: string;
+  audioUrl: string;
+  coverImage?: string | null;
+}
