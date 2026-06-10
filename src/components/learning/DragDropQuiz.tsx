@@ -6,6 +6,8 @@ import { useSound } from "@/hooks/useSound";
 import { FEEDBACK_AUDIO } from "@/config/audio";
 import { useQuizStore } from "@/store/quizStore";
 import { makeTapQuestion, type TapQuestion } from "@/lib/quiz";
+import { Celebration } from "@/components/shared/Celebration";
+import { useCelebration } from "@/hooks/useCelebration";
 
 const COUNT_EMOJI = "🍎";
 const QUESTIONS_PER_QUIZ = 5;
@@ -36,6 +38,7 @@ export function DragDropQuiz({
 
   const playCorrect = useSound(FEEDBACK_AUDIO.correct);
   const playWrong = useSound(FEEDBACK_AUDIO.wrong);
+  const { celebrating, celebrate } = useCelebration();
 
   const [question, setQuestion] = useState<TapQuestion | null>(null);
   const [solved, setSolved] = useState(0);
@@ -67,6 +70,7 @@ export function DragDropQuiz({
 
     if (droppedOn === question.answer) {
       playCorrect();
+      celebrate(); // star-burst on a correct drop
       addCorrect();
       const next = solved + 1;
       setSolved(next);
@@ -81,6 +85,8 @@ export function DragDropQuiz({
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center gap-8">
+      <Celebration show={celebrating} />
+
       {/* Star tally + progress */}
       <div className="flex w-full items-center justify-between text-xl font-bold">
         <span>⭐ {stars}</span>
