@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import Link from "next/link";
 import { Difficulty } from "@prisma/client";
 import { TraceGlyph } from "@/components/learning/TraceGlyph";
+import { HomeButton } from "@/components/shared/HomeButton";
 import { TRACEABLE_NUMBERS, getNumberStrokes } from "@/config/numberPaths";
 
 /** Digit -> spoken word, so the glyph "3" is read as "three". */
@@ -79,8 +80,11 @@ export function NumberTraceActivity({
   if (!strokes) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-4 p-6">
-      <header className="flex w-full max-w-sm items-center justify-between">
+    <main className="relative flex min-h-screen flex-col items-center gap-4 p-6">
+      {/* Icon-only home button, pinned top-left. */}
+      <HomeButton />
+
+      <header className="flex w-full max-w-sm items-center justify-between pl-14">
         <Link href="/learn/numbers" className="text-3xl" aria-label="Back">
           ⬅️
         </Link>

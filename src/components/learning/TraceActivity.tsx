@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import Link from "next/link";
 import { Difficulty } from "@prisma/client";
 import { TraceGlyph } from "@/components/learning/TraceGlyph";
+import { HomeButton } from "@/components/shared/HomeButton";
 import {
   TRACEABLE_LETTERS,
   getLetterStrokes,
@@ -75,11 +76,11 @@ export function TraceActivity({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center gap-4 p-6">
-      <header className="flex w-full max-w-sm items-center justify-between">
-        <Link href="/" className="text-3xl" aria-label="Back home">
-          ⬅️
-        </Link>
+    <main className="relative flex min-h-screen flex-col items-center gap-4 p-6">
+      {/* Icon-only home button, pinned top-left. */}
+      <HomeButton />
+
+      <header className="flex w-full max-w-sm items-center justify-end pl-14">
         <span className="text-lg font-bold text-gray-600">
           ✍️ {index + 1} / {letters.length}
         </span>

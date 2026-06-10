@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { ItemCard } from "@/components/learning/ItemCard";
 import { LoginGate } from "@/components/auth/LoginGate";
+import { HomeButton } from "@/components/shared/HomeButton";
 import { getModuleItems } from "@/config/moduleContent";
 import { guestCanViewItem, GUEST_FREE_ITEMS } from "@/lib/guestAccess";
 import type { TierConfig } from "@/config/tiers";
@@ -72,21 +73,20 @@ export function LearningView({
   const guestAtLimit = !loggedIn && index >= GUEST_FREE_ITEMS - 1;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between gap-6 p-6">
-      {/* Top bar: back to the tier list + home + progress label */}
-      <header className="flex w-full max-w-sm items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link
-            href={`/learn/${moduleSlug}`}
-            className="text-3xl"
-            aria-label="Back to levels"
-          >
-            ⬅️
-          </Link>
-          <Link href="/" className="text-3xl" aria-label="Go to home screen">
-            🏠
-          </Link>
-        </div>
+    <main className="relative flex min-h-screen flex-col items-center justify-between gap-6 p-6">
+      {/* Icon-only home button, pinned top-left. */}
+      <HomeButton />
+
+      {/* Top bar: back to the tier list + progress label (offset right to clear
+          the pinned home button). */}
+      <header className="flex w-full max-w-sm items-center justify-between pl-14">
+        <Link
+          href={`/learn/${moduleSlug}`}
+          className="text-3xl"
+          aria-label="Back to levels"
+        >
+          ⬅️
+        </Link>
         <span className="text-lg font-bold text-gray-600">
           {tier.emoji} {tier.label} · {index + 1} / {items.length}
         </span>
