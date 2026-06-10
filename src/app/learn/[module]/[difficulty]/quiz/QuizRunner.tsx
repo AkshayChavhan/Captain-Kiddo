@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { TapQuiz } from "@/components/learning/TapQuiz";
 import { DragDropQuiz } from "@/components/learning/DragDropQuiz";
@@ -14,27 +14,75 @@ type Stage = "tap" | "drag" | "done";
  * QuizRunner — drives one quiz session for a tier.
  *
  * Runs two rounds: a tap-the-answer quiz, then a drag-and-drop matching quiz.
- * When both are finished it celebrates with the star total. Saving the result to
- * the DB and unlocking the next tier is wired up in numbers08.
+ * When both are finished it celebrates AND saves progress to the DB (which marks
+ * the tier completed -> unlocks the next tier -> awards stars).
+ *
+ * `childId` comes from the server page. If there's no active child yet (Phase D
+ * wires real selection), we skip saving but still let the child play + celebrate.
  */
 export function QuizRunner({
   moduleSlug,
   tier,
+  childId,
 }: Readonly<{
   moduleSlug: string;
   tier: TierConfig;
+  childId: string | null;
 }>) {
   const from = tier.range?.from ?? 1;
   const to = tier.range?.to ?? 5;
 
   const reset = useQuizStore((s) => s.reset);
   const stars = useQuizStore((s) => s.stars);
+  const correct = useQuizStore((s) => s.correct);
+  const answered = useQuizStore((s) => s.answered);
   const [stage, setStage] = useState<Stage>("tap");
 
   // Start each quiz session with a clean tally.
   useEffect(() => {
     reset();
   }, [reset]);
+
+  // Persist the session when the quiz is finished. Completing the tier here is
+  // what unlocks the next tier (saveProgress sets isCompleted + awards stars).
+  const saveSession = useCallback(async () => {
+    if (!childId) return; // no active child yet -> nothing to save
+    const difficulty = tier.difficulty;
+    try {
+      await Promise.all([
+        fetch("/api/progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            childId,
+            module: moduleSlug,
+            difficulty,
+            starsEarned: stars,
+            isCompleted: true,
+          }),
+        }),
+        fetch("/api/test-results", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            childId,
+            module: moduleSlug,
+            difficulty,
+            score: correct,
+            total: answered,
+          }),
+        }),
+      ]);
+    } catch {
+      // Non-fatal for the child: they still see the celebration. (A retry/queue
+      // could be added later for offline robustness.)
+    }
+  }, [childId, moduleSlug, tier.difficulty, stars, correct, answered]);
+
+  const handleDragFinish = () => {
+    setStage("done");
+    void saveSession();
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 p-6">
@@ -56,7 +104,7 @@ export function QuizRunner({
       )}
 
       {stage === "drag" && (
-        <DragDropQuiz from={from} to={to} onFinish={() => setStage("done")} />
+        <DragDropQuiz from={from} to={to} onFinish={handleDragFinish} />
       )}
 
       {stage === "done" && (
