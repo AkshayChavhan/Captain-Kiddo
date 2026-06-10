@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { isParentAreaUnlocked } from "@/lib/parentSession";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
@@ -27,6 +28,12 @@ import { DailyGoal } from "@/components/parent/DailyGoal";
  * can't bypass the gate by tampering with client state.
  */
 export default async function ParentPage() {
+  // The parent area requires a logged-in account first (login = the Parent).
+  // The PIN gate below is an extra kid-lock on top of being logged in.
+  if (!(await getActiveParentId())) {
+    redirect("/login?next=/parent");
+  }
+
   if (!isParentAreaUnlocked()) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-6">

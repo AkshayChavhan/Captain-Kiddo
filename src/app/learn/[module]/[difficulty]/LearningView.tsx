@@ -4,7 +4,9 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence } from "framer-motion";
 import { ItemCard } from "@/components/learning/ItemCard";
+import { LoginGate } from "@/components/auth/LoginGate";
 import { getModuleItems } from "@/config/moduleContent";
+import { guestCanViewItem, GUEST_FREE_ITEMS } from "@/lib/guestAccess";
 import type { TierConfig } from "@/config/tiers";
 
 /**
@@ -15,14 +17,19 @@ import type { TierConfig } from "@/config/tiers";
  * different content. Tap Back/Next to move; each item is an ItemCard (big label +
  * visual + tap-to-hear).
  *
+ * Guests (not logged in) may only see the first item of the Easy tier; trying to
+ * go further shows a LoginGate. Logged-in parents see everything.
+ *
  * Client component because it holds the "current item index" state.
  */
 export function LearningView({
   moduleSlug,
   tier,
+  loggedIn,
 }: Readonly<{
   moduleSlug: string;
   tier: TierConfig;
+  loggedIn: boolean;
 }>) {
   // Build this module+tier's items once.
   const items = useMemo(
@@ -31,6 +38,16 @@ export function LearningView({
   );
 
   const [index, setIndex] = useState(0);
+
+  // Guests can only see the free taste (first Easy item). A guest opening a
+  // non-Easy tier is past the taste -> gate immediately.
+  if (!loggedIn && !guestCanViewItem(tier.difficulty, 0)) {
+    return <LoginGate />;
+  }
+  // A guest who somehow advanced past the free items -> gate.
+  if (!loggedIn && index >= GUEST_FREE_ITEMS) {
+    return <LoginGate />;
+  }
 
   // A module with no content yet -> friendly notice instead of a broken view.
   if (items.length === 0) {
@@ -51,6 +68,8 @@ export function LearningView({
   const isFirst = index <= 0;
   const isLast = index >= items.length - 1;
   const item = items[index];
+  // A guest on their last allowed free item: next step needs login.
+  const guestAtLimit = !loggedIn && index >= GUEST_FREE_ITEMS - 1;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between gap-6 p-6">
@@ -85,8 +104,16 @@ export function LearningView({
         >
           ⬅️ Back
         </button>
-        {/* On the last item, swap Next for a Start-Quiz link. */}
-        {isLast ? (
+        {/* Guests hit the login wall after the free item; otherwise Next, and
+            the Quiz link on the last item. */}
+        {guestAtLimit ? (
+          <Link
+            href={`/login?next=/learn/${moduleSlug}/${tier.difficulty.toLowerCase()}`}
+            className="kiddo-btn bg-kiddo-blue text-center"
+          >
+            Log in ➡️
+          </Link>
+        ) : isLast ? (
           <Link
             href={`/learn/${moduleSlug}/${tier.difficulty.toLowerCase()}/quiz`}
             className="kiddo-btn bg-kiddo-yellow text-center text-gray-800"

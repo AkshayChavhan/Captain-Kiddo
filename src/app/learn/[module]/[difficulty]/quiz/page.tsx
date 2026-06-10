@@ -1,8 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Difficulty } from "@prisma/client";
 import { getModule } from "@/config/modules";
 import { getTier } from "@/config/tiers";
 import { getActiveChildId } from "@/lib/activeChild";
+import { getActiveParentId } from "@/lib/activeParent";
 import { QuizRunner } from "./QuizRunner";
 
 /**
@@ -24,6 +25,13 @@ export default async function QuizPage({
     params.difficulty.toUpperCase()
   ];
   if (!difficulty) notFound();
+
+  // Quizzes are past the free taste — guests must log in.
+  if (!(await getActiveParentId())) {
+    redirect(
+      `/login?next=/learn/${params.module}/${params.difficulty}/quiz`
+    );
+  }
 
   const childId = await getActiveChildId();
 

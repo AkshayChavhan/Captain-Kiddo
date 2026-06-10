@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Difficulty } from "@prisma/client";
 import { getModule } from "@/config/modules";
 import { getTier } from "@/config/tiers";
+import { getActiveParentId } from "@/lib/activeParent";
 import { LearningView } from "./LearningView";
 
 /**
@@ -11,7 +12,7 @@ import { LearningView } from "./LearningView";
  * interactive <LearningView>. Server component so we can 404 cleanly on bad URLs
  * before any client code loads.
  */
-export default function LearningPage({
+export default async function LearningPage({
   params,
 }: Readonly<{
   params: { module: string; difficulty: string };
@@ -25,6 +26,9 @@ export default function LearningPage({
   if (!difficulty) notFound();
 
   const tier = getTier(difficulty);
+  const loggedIn = Boolean(await getActiveParentId());
 
-  return <LearningView moduleSlug={params.module} tier={tier} />;
+  return (
+    <LearningView moduleSlug={params.module} tier={tier} loggedIn={loggedIn} />
+  );
 }
