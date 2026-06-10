@@ -16,11 +16,11 @@ export function TierCard({
   moduleSlug,
   tier,
   locked,
-}: {
+}: Readonly<{
   moduleSlug: string;
   tier: TierConfig;
   locked: boolean;
-}) {
+}>) {
   // The range hint, e.g. "1–5" (only shown if the tier defines a range).
   const rangeLabel = tier.range ? `${tier.range.from}–${tier.range.to}` : null;
 

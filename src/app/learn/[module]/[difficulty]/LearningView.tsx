@@ -17,10 +17,10 @@ import type { TierConfig } from "@/config/tiers";
 export function LearningView({
   moduleSlug,
   tier,
-}: {
+}: Readonly<{
   moduleSlug: string;
   tier: TierConfig;
-}) {
+}>) {
   // Default range fallback keeps the component safe even if a tier has none.
   const from = tier.range?.from ?? 1;
   const to = tier.range?.to ?? 5;

@@ -18,9 +18,9 @@ import { getActiveChildId } from "@/lib/activeChild";
  */
 export default async function ModuleHomePage({
   params,
-}: {
+}: Readonly<{
   params: { module: string };
-}) {
+}>) {
   const moduleSlug = params.module;
   const module = getModule(moduleSlug);
 

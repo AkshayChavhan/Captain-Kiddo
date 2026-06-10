@@ -1,5 +1,8 @@
 "use client";
 
+import { useSound } from "@/hooks/useSound";
+import { numberAudio } from "@/config/audio";
+
 /**
  * NumberCard — the core visual of a Numbers lesson.
  *
@@ -8,9 +11,9 @@
  *   1. the big numeral (e.g. "3")
  *   2. that many objects counted out (e.g. 🍎🍎🍎)
  *
- * "Audio-first" tap-to-play sound and Framer Motion bounce animations are added
- * in the next tickets (numbers03 audio, numbers04 animations); this ticket is
- * the visual card itself. The optional onTap prop is the hook those will use.
+ * AUDIO-FIRST: tapping the card speaks the number (via Howler / useSound). Framer
+ * Motion bounce animations are added next in numbers04. The optional onTap prop
+ * still runs on tap, so callers can compose extra behavior on top of the audio.
  */
 
 /** The object emoji used to count out a number (swappable per module/theme). */
@@ -20,21 +23,29 @@ export function NumberCard({
   value,
   emoji = COUNT_EMOJI,
   onTap,
-}: {
+}: Readonly<{
   /** The number to show, e.g. 3. */
   value: number;
   /** Which object to count with (defaults to apples). */
   emoji?: string;
-  /** Optional tap handler (used later for audio playback). */
+  /** Optional extra tap handler, run after the number's sound plays. */
   onTap?: () => void;
-}) {
-  // Build an array of `value` items to render that many objects.
-  const items = Array.from({ length: Math.max(0, value) });
+}>) {
+  // Build a stable list of keys, one per object to render (e.g. 3 -> 3 apples).
+  const itemKeys = Array.from({ length: Math.max(0, value) }, (_, i) => `obj-${i}`);
+
+  // Audio-first: load this number's spoken clip and play it on tap.
+  const playNumber = useSound(numberAudio(value));
+
+  const handleTap = () => {
+    playNumber(); // speak the number, e.g. "Three!"
+    onTap?.(); // let callers add extra behavior
+  };
 
   return (
     <button
       type="button"
-      onClick={onTap}
+      onClick={handleTap}
       aria-label={`Number ${value}`}
       className="kiddo-card flex min-h-tap w-full max-w-sm flex-col items-center gap-4 bg-white"
     >
@@ -45,8 +56,8 @@ export function NumberCard({
 
       {/* The counted objects — wraps to multiple rows for larger numbers */}
       <div className="flex flex-wrap items-center justify-center gap-1 text-4xl">
-        {items.map((_, i) => (
-          <span key={i} role="img" aria-hidden="true">
+        {itemKeys.map((key) => (
+          <span key={key} role="img" aria-hidden="true">
             {emoji}
           </span>
         ))}

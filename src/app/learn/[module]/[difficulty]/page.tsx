@@ -13,9 +13,9 @@ import { LearningView } from "./LearningView";
  */
 export default function LearningPage({
   params,
-}: {
+}: Readonly<{
   params: { module: string; difficulty: string };
-}) {
+}>) {
   const module = getModule(params.module);
   if (!module) notFound();
 

@@ -15,11 +15,11 @@
 | Phase | Area | Done / Total |
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
-| B | Numbers Learning Module | 3 / 9 |
+| B | Numbers Learning Module | 4 / 9 |
 | C | Media Playback | 0 / 7 |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **15 / 43** |
+| — | **TOTAL** | **16 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -51,7 +51,7 @@
 | B1 | ✅ | `theme01-tailwind-kid-theme` | Tailwind kid-friendly theme (colors, rounded, big targets) |
 | B2 | ✅ | `numbers01-module-home-tiers` | Module home: 3 tiers with 🔒 on locked tiers |
 | B3 | ✅ | `numbers02-learning-view-card` | Big number card + object-counting visuals |
-| B4 | ⬜ | `numbers03-howler-audio-taps` | Tap-to-play audio with Howler |
+| B4 | ✅ | `numbers03-howler-audio-taps` | Tap-to-play audio with Howler |
 | B5 | ⬜ | `numbers04-framer-animations` | Bounce/scale Framer Motion animations |
 | B6 | ⬜ | `numbers05-quiz-tap-answer` | Quiz: tap-the-correct-answer + star rewards |
 | B7 | ⬜ | `numbers06-quiz-drag-drop` | Quiz: drag-and-drop numeral↔quantity matching |
