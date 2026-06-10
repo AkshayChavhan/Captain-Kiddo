@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { TapQuiz } from "@/components/learning/TapQuiz";
 import { DragDropQuiz } from "@/components/learning/DragDropQuiz";
+import { ItemQuiz } from "@/components/learning/ItemQuiz";
+import { getModuleItems } from "@/config/moduleContent";
 import { useQuizStore } from "@/store/quizStore";
 import type { TierConfig } from "@/config/tiers";
 
@@ -31,6 +33,14 @@ export function QuizRunner({
 }>) {
   const from = tier.range?.from ?? 1;
   const to = tier.range?.to ?? 5;
+
+  // Numbers uses its bespoke count-based quizzes; every other module uses the
+  // generic "match the item" quiz built from its content.
+  const isNumbers = moduleSlug === "numbers";
+  const items = useMemo(
+    () => getModuleItems(moduleSlug, tier.range),
+    [moduleSlug, tier.range]
+  );
 
   const reset = useQuizStore((s) => s.reset);
   const stars = useQuizStore((s) => s.stars);
@@ -79,7 +89,7 @@ export function QuizRunner({
     }
   }, [childId, moduleSlug, tier.difficulty, stars, correct, answered]);
 
-  const handleDragFinish = () => {
+  const finishSession = () => {
     setStage("done");
     void saveSession();
   };
@@ -99,12 +109,18 @@ export function QuizRunner({
         </span>
       </header>
 
-      {stage === "tap" && (
-        <TapQuiz from={from} to={to} onFinish={() => setStage("drag")} />
-      )}
-
-      {stage === "drag" && (
-        <DragDropQuiz from={from} to={to} onFinish={handleDragFinish} />
+      {/* Numbers: tap -> drag rounds. Other modules: one item-matching quiz. */}
+      {isNumbers ? (
+        <>
+          {stage === "tap" && (
+            <TapQuiz from={from} to={to} onFinish={() => setStage("drag")} />
+          )}
+          {stage === "drag" && (
+            <DragDropQuiz from={from} to={to} onFinish={finishSession} />
+          )}
+        </>
+      ) : (
+        stage !== "done" && <ItemQuiz items={items} onFinish={finishSession} />
       )}
 
       {stage === "done" && (
