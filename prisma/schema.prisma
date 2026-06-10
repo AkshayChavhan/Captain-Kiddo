@@ -34,6 +34,9 @@ model Parent {
   // the server when the parent enters their PIN to reach the parent area.
   pinHash   String?
 
+  // Login password, stored HASHED (scrypt) — never plain text. Set at sign-up.
+  passwordHash String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
