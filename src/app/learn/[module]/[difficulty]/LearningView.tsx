@@ -66,14 +66,23 @@ export function LearningView({
         >
           ⬅️ Back
         </button>
-        <button
-          type="button"
-          onClick={() => setCurrent((n) => Math.min(to, n + 1))}
-          disabled={isLast}
-          className="kiddo-btn bg-kiddo-green disabled:opacity-40"
-        >
-          Next ➡️
-        </button>
+        {/* On the last number, swap Next for a Start-Quiz link. */}
+        {isLast ? (
+          <Link
+            href={`/learn/${moduleSlug}/${tier.difficulty.toLowerCase()}/quiz`}
+            className="kiddo-btn bg-kiddo-yellow text-center text-gray-800"
+          >
+            Quiz ✏️
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setCurrent((n) => Math.min(to, n + 1))}
+            className="kiddo-btn bg-kiddo-green"
+          >
+            Next ➡️
+          </button>
+        )}
       </footer>
     </main>
   );
