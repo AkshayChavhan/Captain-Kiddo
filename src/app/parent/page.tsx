@@ -2,6 +2,7 @@ import { isParentAreaUnlocked } from "@/lib/parentSession";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
 import { getChildProgressSummary } from "@/lib/progressSummary";
+import { getChildWeakAreas } from "@/lib/weakAreas";
 import { DEFAULT_AVATAR } from "@/config/avatars";
 import { PinPad } from "@/components/parent/PinPad";
 import {
@@ -39,12 +40,15 @@ export default async function ParentPage() {
       })
     : [];
 
-  // Per-child progress summaries (fetched in parallel).
+  // Per-child progress summaries + weak areas (fetched in parallel).
   const progress = await Promise.all(
-    children.map(async (c) => ({
-      child: c,
-      summary: await getChildProgressSummary(c.id),
-    }))
+    children.map(async (c) => {
+      const [summary, weakAreas] = await Promise.all([
+        getChildProgressSummary(c.id),
+        getChildWeakAreas(c.id),
+      ]);
+      return { child: c, summary, weakAreas };
+    })
   );
 
   return (
@@ -60,12 +64,13 @@ export default async function ParentPage() {
       {progress.length > 0 && (
         <section className="flex w-full max-w-md flex-col gap-4">
           <h2 className="font-kiddo text-2xl font-bold">Progress</h2>
-          {progress.map(({ child, summary }) => (
+          {progress.map(({ child, summary, weakAreas }) => (
             <ChildProgress
               key={child.id}
               name={child.name}
               avatar={child.avatar ?? DEFAULT_AVATAR}
               summary={summary}
+              weakAreas={weakAreas}
             />
           ))}
         </section>
