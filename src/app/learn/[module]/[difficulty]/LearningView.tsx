@@ -73,15 +73,20 @@ export function LearningView({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between gap-6 p-6">
-      {/* Top bar: back to the tier list + progress label */}
+      {/* Top bar: back to the tier list + home + progress label */}
       <header className="flex w-full max-w-sm items-center justify-between">
-        <Link
-          href={`/learn/${moduleSlug}`}
-          className="text-3xl"
-          aria-label="Back to levels"
-        >
-          ⬅️
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/learn/${moduleSlug}`}
+            className="text-3xl"
+            aria-label="Back to levels"
+          >
+            ⬅️
+          </Link>
+          <Link href="/" className="text-3xl" aria-label="Go to home screen">
+            🏠
+          </Link>
+        </div>
         <span className="text-lg font-bold text-gray-600">
           {tier.emoji} {tier.label} · {index + 1} / {items.length}
         </span>
