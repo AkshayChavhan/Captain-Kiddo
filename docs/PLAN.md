@@ -18,8 +18,8 @@
 | B | Numbers Learning Module | 9 / 9 ✅ |
 | C | Media Playback | 7 / 7 ✅ |
 | D | Parent Dashboard & Payments | 9 / 9 ✅ |
-| E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **37 / 43** |
+| E | Alphabet Tracing (learn to write) | 1 / 6 |
+| — | **TOTAL** | **38 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -98,7 +98,7 @@
 
 | # | Status | Commit / Doc name | What it does |
 |---|--------|-------------------|--------------|
-| E1 | ⬜ | `trace01-trace-canvas` | A reusable canvas that captures finger/pointer drag paths (touch + mouse) |
+| E1 | ✅ | `trace01-trace-canvas` | A reusable canvas that captures finger/pointer drag paths (touch + mouse) |
 | E2 | ⬜ | `trace02-letter-guide-paths` | Letter outline guide data (stroke paths per letter, A–Z) |
 | E3 | ⬜ | `trace03-on-path-detection` | Detect if the finger stays ON the letter path vs goes off |
 | E4 | ⬜ | `trace04-red-blink-feedback` | Blink the screen red **3 times** on a mistake, then reset for retry |
