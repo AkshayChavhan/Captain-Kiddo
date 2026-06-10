@@ -107,6 +107,17 @@
 
 ---
 
+## ➕ Bonus — Number Tracing (post-plan)
+
+> Added after the 43-ticket plan: kids learn to **write numbers** by tracing 0–9 with
+> a finger, reusing the entire letter-tracing engine. Same red-blink-3× on a mistake.
+
+| # | Status | Commit / Doc name | What it does |
+|---|--------|-------------------|--------------|
+| N1 | ✅ | `tracenum01-number-tracing` | 0–9 stroke data + generic GlyphGuide/TraceGlyph; `/learn/numbers/write` activity reusing the trace engine; saves to the numbers module |
+
+---
+
 ## 📝 How we work (the learning loop)
 
 For **each ticket**, the loop is:
