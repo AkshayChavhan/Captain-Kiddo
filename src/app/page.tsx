@@ -1,22 +1,33 @@
 import Link from "next/link";
 import { MODULES } from "@/config/modules";
+import { getActiveParentId } from "@/lib/activeParent";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 /**
  * Home page (route "/") — the module grid.
  *
  * Shows a tappable card for every learning module. Tapping one goes to that
- * module's home (/learn/<slug>) where the difficulty tiers live.
- *
- * NOTE: paid-module locks (🔒) and the paywall are added in Phase D; for now
- * every card links through so we can build and see the learning flow.
+ * module's home (/learn/<slug>) where the difficulty tiers live. A guest sees a
+ * "Log in" prompt; logged-in parents see a log-out option.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const loggedIn = Boolean(await getActiveParentId());
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-8 p-6">
       <header className="flex flex-col items-center gap-2 pt-6 text-center">
         <div className="text-7xl">🦸</div>
         <h1 className="font-kiddo text-4xl font-bold">Captain Kiddo</h1>
         <p className="text-lg text-gray-600">What shall we learn today?</p>
+
+        {/* Auth status */}
+        {loggedIn ? (
+          <LogoutButton />
+        ) : (
+          <Link href="/login" className="kiddo-btn bg-kiddo-blue px-5 py-2 text-lg">
+            Log in to play all games
+          </Link>
+        )}
       </header>
 
       <section className="grid w-full max-w-md grid-cols-2 gap-5">
