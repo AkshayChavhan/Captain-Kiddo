@@ -16,10 +16,10 @@
 |-------|------|--------------|
 | A | Project Setup & Foundation | 12 / 12 ✅ |
 | B | Numbers Learning Module | 9 / 9 ✅ |
-| C | Media Playback | 6 / 7 |
+| C | Media Playback | 7 / 7 ✅ |
 | D | Parent Dashboard & Payments | 0 / 9 |
 | E | Alphabet Tracing (learn to write) | 0 / 6 |
-| — | **TOTAL** | **27 / 43** |
+| — | **TOTAL** | **28 / 43** |
 
 > Update these counts as tickets are completed.
 
@@ -70,7 +70,7 @@
 | C4 | ✅ | `media04-lyric-sync-highlight` | Karaoke lyric sync (rAF + startSec/endSec) + bouncing ball |
 | C5 | ✅ | `media05-singalong-mascot` | Dancing Captain Kiddo mascot |
 | C6 | ✅ | `media06-lullaby-sleep-timer` | Lullaby calming player + sleep timer (fade → pause) |
-| C7 | ⬜ | `media07-sleep-stories-player` | Sleep-story narrated player + gentle scene animation |
+| C7 | ✅ | `media07-sleep-stories-player` | Sleep-story narrated player + gentle scene animation |
 
 ---
 
