@@ -8,6 +8,7 @@ import { BUNDLE_SLUG } from "@/config/modules";
 import { DEFAULT_AVATAR } from "@/config/avatars";
 import { PinPad } from "@/components/parent/PinPad";
 import { UnlockModules } from "@/components/parent/UnlockModules";
+import { RewardShop } from "@/components/parent/RewardShop";
 import {
   ChildProfiles,
   type ChildSummary,
@@ -73,6 +74,26 @@ export default async function ParentPage() {
   const unlockedSlugs = access.map((a) => a.module);
   const hasBundle = unlockedSlugs.includes(BUNDLE_SLUG);
 
+  // Reward-shop data: each child's star balance + which items they already own.
+  const childIds = children.map((c) => c.id);
+  const unlocks = childIds.length
+    ? await prisma.unlock.findMany({
+        where: { childId: { in: childIds } },
+        select: { childId: true, type: true, itemKey: true },
+      })
+    : [];
+  const ownedByChild: Record<string, string[]> = {};
+  for (const u of unlocks) {
+    const list = ownedByChild[u.childId] ?? [];
+    list.push(`${u.type}:${u.itemKey}`);
+    ownedByChild[u.childId] = list;
+  }
+  const shopChildren = children.map((c) => ({
+    id: c.id,
+    name: c.name,
+    totalStars: c.totalStars,
+  }));
+
   return (
     <main className="flex min-h-screen flex-col items-center gap-6 p-6">
       <header className="pt-6 text-center">
@@ -107,7 +128,8 @@ export default async function ParentPage() {
       {/* Buy / unlock modules (Razorpay checkout) */}
       <UnlockModules unlockedSlugs={unlockedSlugs} hasBundle={hasBundle} />
 
-      {/* The reward shop comes in shop01. */}
+      {/* Reward shop — kids spend earned stars on cosmetics */}
+      <RewardShop childrenList={shopChildren} ownedByChild={ownedByChild} />
     </main>
   );
 }
