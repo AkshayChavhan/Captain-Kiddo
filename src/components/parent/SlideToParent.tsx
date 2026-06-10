@@ -80,7 +80,7 @@ export interface SlideToParentProps {
 
 export function SlideToParent({
   href = "/parent",
-  label = "Slide for grown-ups 👉",
+  label = "Dashboards 👉",
 }: SlideToParentProps = {}) {
   const router = useRouter();
   const trackRef = useRef<HTMLDivElement>(null);

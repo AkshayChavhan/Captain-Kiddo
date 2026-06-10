@@ -5,15 +5,14 @@ import { UnlockType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getShopItem } from "@/config/shop";
 import { getActiveParentId } from "@/lib/activeParent";
-import { isParentAreaUnlocked } from "@/lib/parentSession";
 
 /**
  * Buy a reward-shop item with a child's STARS.
  *
- * Stars are an in-app currency (not money), so this lives behind the parent area
- * like the other management actions. The COST comes from config server-side — the
- * client only says which item, never how many stars. The balance check, deduction,
- * and Unlock creation happen in ONE transaction so a child can't "double-spend".
+ * Stars are an in-app currency (not money). Requires a logged-in parent. The COST
+ * comes from config server-side — the client only says which item, never how many
+ * stars. The balance check, deduction, and Unlock creation happen in ONE
+ * transaction so a child can't "double-spend".
  */
 
 export interface ShopResult {
@@ -26,10 +25,9 @@ export async function buyWithStars(
   type: UnlockType,
   itemKey: string
 ): Promise<ShopResult> {
-  // Gate: parent area unlocked + active parent.
-  if (!isParentAreaUnlocked()) return { ok: false, error: "Locked." };
+  // Gate: must be a logged-in parent.
   const parentId = await getActiveParentId();
-  if (!parentId) return { ok: false, error: "No parent account." };
+  if (!parentId) return { ok: false, error: "Please log in." };
 
   // Resolve the authoritative cost from config (never trust a client price).
   const item = getShopItem(type, itemKey);

@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { isParentAreaUnlocked } from "@/lib/parentSession";
 import { getActiveParentId } from "@/lib/activeParent";
 import { prisma } from "@/lib/prisma";
 import { getChildProgressSummary } from "@/lib/progressSummary";
@@ -7,7 +6,6 @@ import { getChildWeakAreas } from "@/lib/weakAreas";
 import { getTodayLevelsCompleted } from "@/lib/dailyGoal";
 import { BUNDLE_SLUG } from "@/config/modules";
 import { DEFAULT_AVATAR } from "@/config/avatars";
-import { PinPad } from "@/components/parent/PinPad";
 import { UnlockModules } from "@/components/parent/UnlockModules";
 import { RewardShop } from "@/components/parent/RewardShop";
 import {
@@ -20,30 +18,18 @@ import { DailyGoal } from "@/components/parent/DailyGoal";
 /**
  * Parent area entry — /parent
  *
- * If the area is locked, show the PIN pad. Once unlocked (correct PIN this
- * session), show the dashboard: child profiles now, with progress/goals/payments
- * added in the following Phase D tickets.
+ * The kid-resistance is the deliberate SLIDE gesture on the home screen
+ * (SlideToParent) — a toddler poking the screen can't open it. Once a parent
+ * slides in, they get the dashboard directly (no PIN). The only requirement is
+ * being logged in (login = the Parent account); guests are sent to /login.
  *
- * Server component so the lock check + data fetch happen on the server — a kid
- * can't bypass the gate by tampering with client state.
+ * Server component so the login check + data fetch happen on the server.
  */
 export default async function ParentPage() {
-  // The parent area requires a logged-in account first (login = the Parent).
-  // The PIN gate below is an extra kid-lock on top of being logged in.
-  if (!(await getActiveParentId())) {
+  const parentId = await getActiveParentId();
+  if (!parentId) {
     redirect("/login?next=/parent");
   }
-
-  if (!isParentAreaUnlocked()) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-6">
-        <PinPad />
-      </main>
-    );
-  }
-
-  // Unlocked: load this parent's children.
-  const parentId = await getActiveParentId();
   const children: ChildSummary[] = parentId
     ? await prisma.child.findMany({
         where: { parentId },
